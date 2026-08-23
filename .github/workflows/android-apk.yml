@@ -69,10 +69,14 @@ jobs:
           ls -la ../artifacts
 
       - name: Upload Release APK artifact
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: iftin-delivery-release-apk
           path: artifacts/*.apk
+          retention-days: 3
+          compression-level: 0
+          overwrite: true
           if-no-files-found: error
 
       - name: Upload Release APK to GitHub Release
@@ -87,6 +91,8 @@ jobs:
       (github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/v')) ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.build_type == 'debug')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     defaults:
       run:
         working-directory: android-app
@@ -116,8 +122,22 @@ jobs:
           ls -la ../artifacts
 
       - name: Upload Debug APK artifact
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: iftin-delivery-debug-apk
           path: artifacts/*.apk
+          retention-days: 1
+          compression-level: 0
+          overwrite: true
           if-no-files-found: error
+
+      # Fallback: artifact storage quota can be full, releases don't use that quota
+      - name: Publish Debug APK to rolling prerelease
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: debug-latest
+          name: Debug APK (latest)
+          prerelease: true
+          files: artifacts/*.apk
+          token: ${{ secrets.GITHUB_TOKEN }}
