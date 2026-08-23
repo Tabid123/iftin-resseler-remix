@@ -69,10 +69,14 @@ jobs:
           ls -la ../artifacts
 
       - name: Upload Release APK artifact
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: iftin-delivery-release-apk
           path: artifacts/*.apk
+          retention-days: 3
+          compression-level: 0
+          overwrite: true
           if-no-files-found: error
 
       - name: Upload Release APK to GitHub Release
