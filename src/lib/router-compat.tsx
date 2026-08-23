@@ -112,7 +112,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
     <TanstackLink
       ref={ref}
       to={parsed.to}
-      search={parsed.search}
+      search={parsed.search as never}
       hash={parsed.hash}
       replace={replace}
       state={state as never}
