@@ -20,6 +20,7 @@ import {
   BarChart3,
   Receipt,
   Zap,
+  KeyRound,
   PhoneCall,
   Building2,
 } from "lucide-react";
@@ -83,6 +84,7 @@ const navItems: NavItem[] = [
   { title: "Audit Log", titleSo: "📋 Taariikhda", value: "audit-log", icon: LayoutDashboard, permission: "view_audit_log" },
   { title: "Admin Management", titleSo: "👥 Admins", value: "admin-management", icon: Users, permission: "manage_admins" },
   { title: "Fraud Alerts", titleSo: "🚨 Fraud Alerts", value: "fraud-alerts", icon: AlertTriangle, permission: "view_audit_log" },
+  { title: "SIM PINs", titleSo: "🔑 SIM PIN", value: "sim-pins", icon: KeyRound, permission: "manage_settings" },
   { title: "USSD Flows", titleSo: "📞 USSD Flows", value: "ussd-flows", icon: PhoneCall, permission: "manage_settings" },
   { title: "USSD Learning", titleSo: "🧠 USSD Learning", value: "ussd-learning", icon: PhoneCall, permission: "manage_settings" },
   { title: "Contact Messages", titleSo: "📨 Nala Soo Xiriir", value: "contact-messages", icon: MessageSquare, permission: "manage_settings" },
