@@ -523,7 +523,7 @@ const DataPackages = () => {
           return (
           <div 
             key={pkg.id} 
-            ref={(el) => packageRefs.current[pkg.id] = el}
+            ref={(el) => { packageRefs.current[pkg.id] = el; }}
             className={`bg-white rounded-lg border shadow-sm p-4 transition-all ${
               selectedPackageId === pkg.id ? 'ring-2 ring-primary shadow-lg' : ''
             }`}
