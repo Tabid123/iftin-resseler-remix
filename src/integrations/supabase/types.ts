@@ -2758,6 +2758,7 @@ export type Database = {
         }
         Returns: Json
       }
+      current_delivery_tenant: { Args: never; Returns: string }
       current_tenant_id: { Args: never; Returns: string }
       force_delete_provider: { Args: { p_provider_id: string }; Returns: Json }
       generate_daily_outreach_targets: {
@@ -2865,6 +2866,7 @@ export type Database = {
         Args: { p_period?: string; p_provider_id?: string }
         Returns: Json
       }
+      get_delivery_session: { Args: never; Returns: Json }
       get_featured_packages: {
         Args: { p_tenant_id?: string }
         Returns: {
