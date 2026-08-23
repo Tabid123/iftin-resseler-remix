@@ -91,7 +91,7 @@ export function useSearchParams(): [
 }
 
 export function useParams<T = Record<string, string>>(): T {
-  return useTanstackParams({ strict: false }) as T;
+  return useTanstackParams({ strict: false } as never) as T;
 }
 
 type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
@@ -116,7 +116,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
       hash={parsed.hash}
       replace={replace}
       state={state as never}
-      {...(rest as never)}
+      {...(rest as Record<string, unknown>)}
     />
   );
 });
