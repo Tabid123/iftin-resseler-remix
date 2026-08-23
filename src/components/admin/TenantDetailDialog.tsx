@@ -368,13 +368,13 @@ export default function TenantDetailDialog({ tenantId, open, onOpenChange, onCha
                   <Button
                     variant="destructive"
                     disabled={busy || confirmSlug !== tenant.slug}
-                    onClick={async () => {
-                      await run(
+                    onClick={() =>
+                      run(
                         { action: "delete", tenant_id: tenant.id, confirm_slug: confirmSlug },
-                        "Reseller-ka waa la tirtiray"
-                      );
-                      onOpenChange(false);
-                    }}
+                        "Reseller-ka waa la tirtiray",
+                        { close: true }
+                      )
+                    }
                   >
                     <Trash2 className="mr-2 h-4 w-4" /> Tirtir
                   </Button>
