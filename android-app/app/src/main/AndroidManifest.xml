@@ -48,6 +48,13 @@
             </intent-filter>
         </activity>
 
+        <!-- Login Activity -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.IftinDelivery"
+            android:screenOrientation="portrait" />
+
         <!-- Main Activity -->
         <activity
             android:name=".MainActivity"
