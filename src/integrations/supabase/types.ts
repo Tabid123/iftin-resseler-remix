@@ -3020,6 +3020,10 @@ export type Database = {
         Args: { _kw: string; _step_id: string }
         Returns: undefined
       }
+      link_device_to_tenant: {
+        Args: { p_device_id: string; p_device_name?: string }
+        Returns: Json
+      }
       resolve_public_tenant: { Args: { p_tenant_id?: string }; Returns: string }
       resolve_unmatched_dialog: {
         Args: { _id: string; _step_id: string }
