@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from "@/lib/router-compat";
 import { Phone, MessageCircle, Wifi, ArrowLeft, Edit, Sun, CalendarDays, CalendarRange, Infinity } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from "@/lib/router-compat";
 import { useConnectivity } from '@/contexts/ConnectivityContext';
 
 // Pages that should auto-redirect when coming online

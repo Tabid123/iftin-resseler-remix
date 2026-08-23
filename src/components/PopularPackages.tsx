@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { TrendingUp, Wifi } from 'lucide-react';
 import { Card } from './ui/card';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "@/lib/router-compat";
 import { formatPrice } from '@/lib/utils';
 import { useConnectivity } from '@/contexts/ConnectivityContext';
 

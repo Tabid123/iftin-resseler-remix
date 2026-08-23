@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from "@/lib/router-compat";
 import { Button } from '@/components/ui/button';
 import { CheckCircle } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';

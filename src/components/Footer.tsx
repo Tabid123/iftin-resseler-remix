@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "@/lib/router-compat";
 const Footer = () => {
   const location = useLocation();
   return <footer className="text-center space-y-4 text-muted-foreground text-sm">

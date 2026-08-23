@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { PaymentLoadingOverlay } from '@/components/PaymentLoadingOverlay';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from "@/lib/router-compat";
 import { ArrowLeft, Check, Zap, Clock, Smartphone, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

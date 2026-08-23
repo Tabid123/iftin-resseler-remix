@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft, Shield, Lock, Eye, Database, Bell, UserCheck } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "@/lib/router-compat";
 import { Button } from "@/components/ui/button";
 const PrivacyPolicy = () => {
   const navigate = useNavigate();

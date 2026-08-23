@@ -1,4 +1,4 @@
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useSearchParams } from "@/lib/router-compat";
 import Landing from '@/pages/Landing';
 
 /**

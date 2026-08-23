@@ -15,7 +15,7 @@ import {
   LogOut,
   Building2,
 } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "@/lib/router-compat";
 import { useTenant } from '@/contexts/TenantContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSelector from '@/components/LanguageSelector';
