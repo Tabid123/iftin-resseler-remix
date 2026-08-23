@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DeliveryRouteImport } from './routes/delivery'
 import { Route as DownloadAppRouteImport } from './routes/download-app'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as LandingRouteImport } from './routes/landing'
@@ -27,11 +26,6 @@ import { Route as ResellerLoginRouteImport } from './routes/reseller/login'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DeliveryRoute = DeliveryRouteImport.update({
-  id: '/delivery',
-  path: '/delivery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DownloadAppRoute = DownloadAppRouteImport.update({
@@ -97,7 +91,6 @@ const ResellerLoginRoute = ResellerLoginRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/delivery': typeof DeliveryRoute
   '/download-app': typeof DownloadAppRoute
   '/history': typeof HistoryRoute
   '/landing': typeof LandingRoute
@@ -113,7 +106,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/delivery': typeof DeliveryRoute
   '/download-app': typeof DownloadAppRoute
   '/history': typeof HistoryRoute
   '/landing': typeof LandingRoute
@@ -130,7 +122,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/delivery': typeof DeliveryRoute
   '/download-app': typeof DownloadAppRoute
   '/history': typeof HistoryRoute
   '/landing': typeof LandingRoute
@@ -148,7 +139,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/delivery'
     | '/download-app'
     | '/history'
     | '/landing'
@@ -164,7 +154,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/delivery'
     | '/download-app'
     | '/history'
     | '/landing'
@@ -180,7 +169,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/delivery'
     | '/download-app'
     | '/history'
     | '/landing'
@@ -197,7 +185,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DeliveryRoute: typeof DeliveryRoute
   DownloadAppRoute: typeof DownloadAppRoute
   HistoryRoute: typeof HistoryRoute
   LandingRoute: typeof LandingRoute
@@ -219,13 +206,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/delivery': {
-      id: '/delivery'
-      path: '/delivery'
-      fullPath: '/delivery'
-      preLoaderRoute: typeof DeliveryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/download-app': {
@@ -317,7 +297,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DeliveryRoute: DeliveryRoute,
   DownloadAppRoute: DownloadAppRoute,
   HistoryRoute: HistoryRoute,
   LandingRoute: LandingRoute,
