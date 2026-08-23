@@ -85,11 +85,11 @@ export default function ResellerSimPins() {
     setSavingId(row.provider_id);
     try {
       if (row.hasRow) {
+        // Update EVERY instruction row of this provider (category/package level too)
         const { error } = await supabase
           .from("delivery_instructions")
           .update({ sim_password: row.pin })
-          .eq("provider_id", row.provider_id)
-          .eq("tenant_id", tenantId);
+          .eq("provider_id", row.provider_id);
         if (error) throw error;
       } else {
         const { error } = await supabase.from("delivery_instructions").insert({
@@ -101,6 +101,22 @@ export default function ResellerSimPins() {
         });
         if (error) throw error;
       }
+      // Refresh PIN on deliveries that are still waiting so they use the new PIN
+      const { data: pendingOrders } = await supabase
+        .from("orders")
+        .select("id")
+        .eq("provider_id", row.provider_id);
+      const orderIds = (pendingOrders ?? []).map((o: any) => o.id);
+      if (orderIds.length) {
+        for (let i = 0; i < orderIds.length; i += 200) {
+          await supabase
+            .from("delivery_queue")
+            .update({ pin_code: row.pin })
+            .in("order_id", orderIds.slice(i, i + 200))
+            .in("status", ["pending", "failed", "processing"]);
+        }
+      }
+
       setRows((prev) =>
         prev.map((r) =>
           r.provider_id === row.provider_id ? { ...r, saved: row.pin, hasRow: true } : r
