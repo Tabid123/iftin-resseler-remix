@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.iftin.delivery.api.DeliveryApiClient
+import com.iftin.delivery.auth.TenantSession
 import com.iftin.delivery.data.DeliveryDatabase
 import com.iftin.delivery.service.UssdDialerService
 import com.iftin.delivery.ui.theme.IftinDeliveryTheme
@@ -234,6 +235,9 @@ class MainActivity : ComponentActivity() {
             try {
                 apiClient.registerDevice(deviceId, deviceName, sim1Number, sim2Number)
                 println("✅ Device registered successfully")
+                // Keep the device bound to the signed-in company (tenant)
+                val link = TenantSession.linkDevice(this@MainActivity)
+                println(if (link.ok) "✅ Device linked to tenant: ${link.tenantName}" else "⚠️ Tenant link failed: ${link.error}")
             } catch (e: Exception) {
                 println("❌ Device registration failed: ${e.message}")
             }
