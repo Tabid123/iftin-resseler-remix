@@ -70,7 +70,17 @@ export default function TenantDetailDialog({ tenantId, open, onOpenChange, onCha
       setMembers(d.members ?? []);
       setStats(d.stats ?? { orders: 0, devices: 0, members: 0 });
     } catch (e: any) {
-      toast.error(e.message);
+      const msg = String(e?.message ?? "");
+      if (msg.includes("Tenant not found")) {
+        // Tenant was deleted (or the list is stale) — close and refresh instead
+        // of leaving an empty dialog open.
+        setTenant(null);
+        onOpenChange(false);
+        onChanged();
+        toast.error("Reseller-kan mar dambe ma jiro");
+      } else {
+        toast.error(msg || "Khalad");
+      }
     } finally {
       setLoading(false);
     }
