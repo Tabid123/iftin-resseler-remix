@@ -5,7 +5,7 @@ import { routeTree } from "./routeTree.gen";
 export const getRouter = () => {
   const queryClient = new QueryClient();
 
-  const router = createRouter({
+  const router = createRouter({ /* legacy import: relaxed types */
     routeTree,
     context: { queryClient },
     scrollRestoration: true,

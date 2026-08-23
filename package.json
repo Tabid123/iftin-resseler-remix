@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@capacitor-community/admob": "^8.1.0",
+    "@capacitor-firebase/analytics": "^8.4.0",
+    "@capacitor-firebase/crashlytics": "^8.4.0",
     "@capacitor/app": "^8.1.1",
     "@capacitor/core": "^8.5.0",
     "@capacitor/device": "^8.0.3",
@@ -80,6 +82,7 @@
     "tw-animate-css": "^1.3.4",
     "vaul": "^1.1.2",
     "vite-tsconfig-paths": "^6.0.2",
+    "workbox-window": "^7.4.1",
     "xlsx": "^0.18.5",
     "zod": "^4.4.3"
   },

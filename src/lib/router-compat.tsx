@@ -58,7 +58,8 @@ export function useLocation() {
     pathname: location.pathname,
     search: location.searchStr ? `?${location.searchStr.replace(/^\?/, "")}` : "",
     hash: location.hash ? `#${location.hash.replace(/^#/, "")}` : "",
-    state: (location.state ?? {}) as Record<string, unknown>,
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    state: (location.state ?? {}) as any,
     key: location.href,
   };
 }
