@@ -43,6 +43,7 @@ const UnmatchedPayments = lazy(() => import('@/components/admin/UnmatchedPayment
 const OfflinePaymentSettings = lazy(() => import('@/components/admin/OfflinePaymentSettings'));
 const AppSettings = lazy(() => import('@/components/admin/AppSettings'));
 const UssdFlowsManager = lazy(() => import('@/components/admin/UssdFlowsManager'));
+const SimPinsManager = lazy(() => import('@/components/reseller/ResellerSimPins'));
 const UssdLearningDashboard = lazy(() => import('@/components/admin/UssdLearningDashboard'));
 const ContactMessagesTab = lazy(() => import('@/components/admin/ContactMessagesTab'));
 const SuperAdminTenants = lazy(() => import('@/components/admin/SuperAdminTenants'));
@@ -1150,6 +1151,7 @@ const AdminDashboard = () => {
                 {activeTab === 'admin-management' && <TabsContent value="admin-management"><Suspense fallback={<TabLoader />}><AdminManagement /></Suspense></TabsContent>}
                 {activeTab === 'fraud-alerts' && <TabsContent value="fraud-alerts"><Suspense fallback={<TabLoader />}><FraudAlerts /></Suspense></TabsContent>}
                 {activeTab === 'settings' && <TabsContent value="settings"><Suspense fallback={<TabLoader />}><AppSettings /></Suspense></TabsContent>}
+                {activeTab === 'sim-pins' && <TabsContent value="sim-pins"><Suspense fallback={<TabLoader />}><SimPinsManager /></Suspense></TabsContent>}
                 {activeTab === 'ussd-flows' && <TabsContent value="ussd-flows"><Suspense fallback={<TabLoader />}><UssdFlowsManager /></Suspense></TabsContent>}
                 {activeTab === 'ussd-learning' && <TabsContent value="ussd-learning"><Suspense fallback={<TabLoader />}><UssdLearningDashboard /></Suspense></TabsContent>}
                 {activeTab === 'contact-messages' && <TabsContent value="contact-messages"><Suspense fallback={<TabLoader />}><ContactMessagesTab /></Suspense></TabsContent>}
