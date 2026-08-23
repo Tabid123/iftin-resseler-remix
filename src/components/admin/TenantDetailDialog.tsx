@@ -70,7 +70,17 @@ export default function TenantDetailDialog({ tenantId, open, onOpenChange, onCha
       setMembers(d.members ?? []);
       setStats(d.stats ?? { orders: 0, devices: 0, members: 0 });
     } catch (e: any) {
-      toast.error(e.message);
+      const msg = String(e?.message ?? "");
+      if (msg.includes("Tenant not found")) {
+        // Tenant was deleted (or the list is stale) — close and refresh instead
+        // of leaving an empty dialog open.
+        setTenant(null);
+        onOpenChange(false);
+        onChanged();
+        toast.error("Reseller-kan mar dambe ma jiro");
+      } else {
+        toast.error(msg || "Khalad");
+      }
     } finally {
       setLoading(false);
     }
@@ -99,12 +109,22 @@ export default function TenantDetailDialog({ tenantId, open, onOpenChange, onCha
     }
   };
 
-  const run = async (body: Record<string, unknown>, okMsg: string) => {
+  const run = async (
+    body: Record<string, unknown>,
+    okMsg: string,
+    opts: { reload?: boolean; close?: boolean } = {},
+  ) => {
+    const { reload = true, close = false } = opts;
     setBusy(true);
     try {
       await call(body);
       toast.success(okMsg);
-      await load();
+      if (close) {
+        setTenant(null);
+        onOpenChange(false);
+      } else if (reload) {
+        await load();
+      }
       onChanged();
     } catch (e: any) {
       toast.error(e.message);
@@ -358,13 +378,13 @@ export default function TenantDetailDialog({ tenantId, open, onOpenChange, onCha
                   <Button
                     variant="destructive"
                     disabled={busy || confirmSlug !== tenant.slug}
-                    onClick={async () => {
-                      await run(
+                    onClick={() =>
+                      run(
                         { action: "delete", tenant_id: tenant.id, confirm_slug: confirmSlug },
-                        "Reseller-ka waa la tirtiray"
-                      );
-                      onOpenChange(false);
-                    }}
+                        "Reseller-ka waa la tirtiray",
+                        { close: true }
+                      )
+                    }
                   >
                     <Trash2 className="mr-2 h-4 w-4" /> Tirtir
                   </Button>
