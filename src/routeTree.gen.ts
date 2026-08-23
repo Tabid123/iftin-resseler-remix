@@ -10,33 +10,193 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DownloadAppRouteImport } from './routes/download-app'
+import { Route as HistoryRouteImport } from './routes/history'
+import { Route as LandingRouteImport } from './routes/landing'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as PaymentSuccessRouteImport } from './routes/payment-success'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ProvidersRouteImport } from './routes/providers'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as ResellerIndexRouteImport } from './routes/reseller/index'
+import { Route as ResellerLoginRouteImport } from './routes/reseller/login'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DownloadAppRoute = DownloadAppRouteImport.update({
+  id: '/download-app',
+  path: '/download-app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingRoute = LandingRouteImport.update({
+  id: '/landing',
+  path: '/landing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
+  id: '/payment-success',
+  path: '/payment-success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProvidersRoute = ProvidersRouteImport.update({
+  id: '/providers',
+  path: '/providers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResellerIndexRoute = ResellerIndexRouteImport.update({
+  id: '/reseller/',
+  path: '/reseller/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResellerLoginRoute = ResellerLoginRouteImport.update({
+  id: '/reseller/login',
+  path: '/reseller/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/download-app': typeof DownloadAppRoute
+  '/history': typeof HistoryRoute
+  '/landing': typeof LandingRoute
+  '/notifications': typeof NotificationsRoute
+  '/payment-success': typeof PaymentSuccessRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/profile': typeof ProfileRoute
+  '/providers': typeof ProvidersRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/reseller/login': typeof ResellerLoginRoute
+  '/admin/': typeof AdminIndexRoute
+  '/reseller/': typeof ResellerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/download-app': typeof DownloadAppRoute
+  '/history': typeof HistoryRoute
+  '/landing': typeof LandingRoute
+  '/notifications': typeof NotificationsRoute
+  '/payment-success': typeof PaymentSuccessRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/profile': typeof ProfileRoute
+  '/providers': typeof ProvidersRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/reseller/login': typeof ResellerLoginRoute
+  '/admin': typeof AdminIndexRoute
+  '/reseller': typeof ResellerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/download-app': typeof DownloadAppRoute
+  '/history': typeof HistoryRoute
+  '/landing': typeof LandingRoute
+  '/notifications': typeof NotificationsRoute
+  '/payment-success': typeof PaymentSuccessRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/profile': typeof ProfileRoute
+  '/providers': typeof ProvidersRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/reseller/login': typeof ResellerLoginRoute
+  '/admin/': typeof AdminIndexRoute
+  '/reseller/': typeof ResellerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/download-app'
+    | '/history'
+    | '/landing'
+    | '/notifications'
+    | '/payment-success'
+    | '/privacy-policy'
+    | '/profile'
+    | '/providers'
+    | '/admin/login'
+    | '/reseller/login'
+    | '/admin/'
+    | '/reseller/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/download-app'
+    | '/history'
+    | '/landing'
+    | '/notifications'
+    | '/payment-success'
+    | '/privacy-policy'
+    | '/profile'
+    | '/providers'
+    | '/admin/login'
+    | '/reseller/login'
+    | '/admin'
+    | '/reseller'
+  id:
+    | '__root__'
+    | '/'
+    | '/download-app'
+    | '/history'
+    | '/landing'
+    | '/notifications'
+    | '/payment-success'
+    | '/privacy-policy'
+    | '/profile'
+    | '/providers'
+    | '/admin/login'
+    | '/reseller/login'
+    | '/admin/'
+    | '/reseller/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DownloadAppRoute: typeof DownloadAppRoute
+  HistoryRoute: typeof HistoryRoute
+  LandingRoute: typeof LandingRoute
+  NotificationsRoute: typeof NotificationsRoute
+  PaymentSuccessRoute: typeof PaymentSuccessRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  ProfileRoute: typeof ProfileRoute
+  ProvidersRoute: typeof ProvidersRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  ResellerLoginRoute: typeof ResellerLoginRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  ResellerIndexRoute: typeof ResellerIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +208,107 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/download-app': {
+      id: '/download-app'
+      path: '/download-app'
+      fullPath: '/download-app'
+      preLoaderRoute: typeof DownloadAppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/landing': {
+      id: '/landing'
+      path: '/landing'
+      fullPath: '/landing'
+      preLoaderRoute: typeof LandingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment-success': {
+      id: '/payment-success'
+      path: '/payment-success'
+      fullPath: '/payment-success'
+      preLoaderRoute: typeof PaymentSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/providers': {
+      id: '/providers'
+      path: '/providers'
+      fullPath: '/providers'
+      preLoaderRoute: typeof ProvidersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reseller/': {
+      id: '/reseller/'
+      path: '/reseller'
+      fullPath: '/reseller/'
+      preLoaderRoute: typeof ResellerIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reseller/login': {
+      id: '/reseller/login'
+      path: '/reseller/login'
+      fullPath: '/reseller/login'
+      preLoaderRoute: typeof ResellerLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DownloadAppRoute: DownloadAppRoute,
+  HistoryRoute: HistoryRoute,
+  LandingRoute: LandingRoute,
+  NotificationsRoute: NotificationsRoute,
+  PaymentSuccessRoute: PaymentSuccessRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  ProfileRoute: ProfileRoute,
+  ProvidersRoute: ProvidersRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  ResellerLoginRoute: ResellerLoginRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  ResellerIndexRoute: ResellerIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
