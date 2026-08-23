@@ -120,8 +120,22 @@ jobs:
           ls -la ../artifacts
 
       - name: Upload Debug APK artifact
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: iftin-delivery-debug-apk
           path: artifacts/*.apk
+          retention-days: 1
+          compression-level: 0
+          overwrite: true
           if-no-files-found: error
+
+      # Fallback: artifact storage quota can be full, releases don't use that quota
+      - name: Publish Debug APK to rolling prerelease
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: debug-latest
+          name: Debug APK (latest)
+          prerelease: true
+          files: artifacts/*.apk
+          token: ${{ secrets.GITHUB_TOKEN }}
