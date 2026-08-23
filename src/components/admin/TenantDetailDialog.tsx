@@ -99,12 +99,22 @@ export default function TenantDetailDialog({ tenantId, open, onOpenChange, onCha
     }
   };
 
-  const run = async (body: Record<string, unknown>, okMsg: string) => {
+  const run = async (
+    body: Record<string, unknown>,
+    okMsg: string,
+    opts: { reload?: boolean; close?: boolean } = {},
+  ) => {
+    const { reload = true, close = false } = opts;
     setBusy(true);
     try {
       await call(body);
       toast.success(okMsg);
-      await load();
+      if (close) {
+        setTenant(null);
+        onOpenChange(false);
+      } else if (reload) {
+        await load();
+      }
       onChanged();
     } catch (e: any) {
       toast.error(e.message);
