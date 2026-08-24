@@ -256,6 +256,14 @@ const ProviderSelection = () => {
       setTimeout(() => setShowOfflineToast(false), 3000);
       return;
     }
+    if ((p as any).out_of_balance) {
+      toast({
+        title: 'Balance ma heyno',
+        description: `${p.provider_name} hadda balance ma haysato. Fadlan mar kale isku day.`,
+        variant: 'destructive',
+      });
+      return;
+    }
     setSelectedProviderId(p.id);
     setJumloOpen(true);
   };

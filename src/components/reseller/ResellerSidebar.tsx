@@ -60,6 +60,7 @@ export const RESELLER_GROUPS: ResellerNavGroup[] = [
     labelSo: 'Badeecadaha',
     icon: Package,
     items: [
+      { value: 'providers', title: 'Companies', titleSo: 'Shirkadaha', icon: Building2 },
       { value: 'wholesale-tiers', title: 'Wholesale Tiers', titleSo: 'Jumlo Tiers', icon: DollarSign },
     ],
   },
