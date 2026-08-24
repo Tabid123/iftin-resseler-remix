@@ -6,8 +6,16 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, Save, Wallet, Plus } from 'lucide-react';
+import { Loader2, Save, Wallet, Plus, Check } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
 
 interface ProviderRow {
@@ -27,6 +35,7 @@ const DEFAULT_PROVIDERS = [
   { provider_name: 'Somtel', provider_logo: '/storage/logos/somtel.png' },
   { provider_name: 'Amtel', provider_logo: '/storage/logos/somlink.jpg' },
 ];
+
 
 
 export default function ResellerProviders() {
