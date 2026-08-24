@@ -46,8 +46,6 @@ const UssdFlowsManager = lazy(() => import('@/components/admin/UssdFlowsManager'
 const SimPinsManager = lazy(() => import('@/components/reseller/ResellerSimPins'));
 const UssdLearningDashboard = lazy(() => import('@/components/admin/UssdLearningDashboard'));
 const ContactMessagesTab = lazy(() => import('@/components/admin/ContactMessagesTab'));
-const SuperAdminTenants = lazy(() => import('@/components/admin/SuperAdminTenants'));
-const SubscriptionsManager = lazy(() => import('@/components/admin/SubscriptionsManager'));
 const SubscriptionBanner = lazy(() => import('@/components/admin/SubscriptionBanner'));
 
 const BalanceManagement = lazy(() => import('@/components/admin/BalanceManagement').then(m => ({ default: m.BalanceManagement })));
