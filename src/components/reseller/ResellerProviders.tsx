@@ -6,8 +6,16 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, Save, Wallet, Plus } from 'lucide-react';
+import { Loader2, Save, Wallet, Plus, Check } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
 
 interface ProviderRow {
@@ -29,12 +37,17 @@ const DEFAULT_PROVIDERS = [
 ];
 
 
+
 export default function ResellerProviders() {
   const { currentTenantId } = useTenant();
   const [items, setItems] = useState<ProviderRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [numbers, setNumbers] = useState<Record<string, string>>({});
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [customName, setCustomName] = useState('');
+
 
   const load = async () => {
     if (!currentTenantId) return;
@@ -69,24 +82,53 @@ export default function ResellerProviders() {
     toast({ title: 'Guul', description: message });
   };
 
-  const seedDefaults = async () => {
-    if (!currentTenantId) return;
-    setSavingId('seed');
-    const existing = new Set(items.map((i) => i.provider_name?.toLowerCase()));
-    const rows = DEFAULT_PROVIDERS.filter((d) => !existing.has(d.provider_name.toLowerCase())).map((d, i) => ({
-      provider_name: d.provider_name,
-      provider_logo: d.provider_logo,
-      is_active: true,
-      display_order: items.length + i + 1,
-      tenant_id: currentTenantId,
-    }));
-    if (rows.length === 0) { setSavingId(null); toast({ title: 'Ogow', description: '4-ta shirkadood horey ayay u jireen' }); return; }
+  const addProviders = async (names: { provider_name: string; provider_logo: string | null }[]) => {
+    if (!currentTenantId || names.length === 0) return;
+    setSavingId('add');
+    const existing = new Set(items.map((i) => i.provider_name?.toLowerCase().trim()));
+    const rows = names
+      .filter((d) => !existing.has(d.provider_name.toLowerCase().trim()))
+      .map((d, i) => ({
+        provider_name: d.provider_name.trim(),
+        provider_logo: d.provider_logo,
+        is_active: true,
+        display_order: items.length + i + 1,
+        tenant_id: currentTenantId,
+      }));
+    if (rows.length === 0) {
+      setSavingId(null);
+      toast({ title: 'Ogow', description: 'Shirkaddaas horey ayay u jirtay' });
+      return;
+    }
     const { error } = await supabase.from('providers_config').insert(rows);
     setSavingId(null);
     if (error) { toast({ title: 'Khalad', description: error.message, variant: 'destructive' }); return; }
     toast({ title: 'Guul', description: `${rows.length} shirkadood ayaa lagu daray` });
+    setPickerOpen(false);
+    setSelected([]);
+    setCustomName('');
     load();
   };
+
+  const toggleSelected = (name: string) =>
+    setSelected((prev) => (prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]));
+
+  const submitPicker = () => {
+    const chosen = DEFAULT_PROVIDERS.filter((d) => selected.includes(d.provider_name)).map((d) => ({
+      provider_name: d.provider_name,
+      provider_logo: d.provider_logo as string | null,
+    }));
+    if (customName.trim()) chosen.push({ provider_name: customName.trim(), provider_logo: null });
+    if (chosen.length === 0) {
+      toast({ title: 'Ogow', description: 'Fadlan dooro ama qor shirkad', variant: 'destructive' });
+      return;
+    }
+    addProviders(chosen);
+  };
+
+  const availableDefaults = DEFAULT_PROVIDERS.filter(
+    (d) => !items.some((i) => i.provider_name?.toLowerCase().trim() === d.provider_name.toLowerCase())
+  );
 
   if (loading) {
     return <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
@@ -101,9 +143,8 @@ export default function ResellerProviders() {
             Shirkad walba shid/dami, lambar lacag u deji, ama u calaamadi "Balance ma heyno".
           </p>
         </div>
-        <Button variant="outline" onClick={seedDefaults} disabled={savingId === 'seed'}>
-          {savingId === 'seed' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
-          Ku dar 4 shirkadood
+        <Button variant="outline" onClick={() => setPickerOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" /> Ku dar shirkad
         </Button>
       </div>
 
@@ -111,12 +152,66 @@ export default function ResellerProviders() {
         <Card>
           <CardContent className="space-y-3 py-8 text-center text-muted-foreground">
             <p>Shirkad lama helin.</p>
-            <Button onClick={seedDefaults} disabled={savingId === 'seed'}>
-              <Plus className="mr-2 h-4 w-4" /> Ku dar Hormuud, Somnet, Somtel, Amtel
+            <Button onClick={() => setPickerOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" /> Ku dar shirkad
             </Button>
           </CardContent>
         </Card>
       )}
+
+      <Dialog open={pickerOpen} onOpenChange={setPickerOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Ku dar shirkad</DialogTitle>
+            <DialogDescription>Dooro shirkadaha aad rabto ama qor mid cusub.</DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3">
+            {availableDefaults.length > 0 ? (
+              <div className="grid gap-2 sm:grid-cols-2">
+                {availableDefaults.map((d) => {
+                  const active = selected.includes(d.provider_name);
+                  return (
+                    <button
+                      key={d.provider_name}
+                      type="button"
+                      onClick={() => toggleSelected(d.provider_name)}
+                      className={`flex items-center gap-3 rounded-lg border p-3 text-left transition-colors ${
+                        active ? 'border-primary bg-primary/10' : 'hover:bg-muted'
+                      }`}
+                    >
+                      <img src={d.provider_logo} alt={`${d.provider_name} logo`} className="h-8 w-8 rounded object-contain bg-muted p-0.5" />
+                      <span className="flex-1 text-sm font-medium">{d.provider_name}</span>
+                      {active && <Check className="h-4 w-4 text-primary" />}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">Shirkadaha caadiga ah dhammaan way ku jiraan.</p>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="custom-provider">Shirkad kale (magac)</Label>
+              <Input
+                id="custom-provider"
+                placeholder="Tusaale: Golis"
+                value={customName}
+                onChange={(e) => setCustomName(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPickerOpen(false)}>Jooji</Button>
+            <Button onClick={submitPicker} disabled={savingId === 'add'}>
+              {savingId === 'add' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+              Ku dar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
 
 
 
