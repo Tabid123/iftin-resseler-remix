@@ -54,6 +54,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        // Require tenant login before showing the dashboard
+        if (!TenantSession.isLoggedIn(this)) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
         database = DeliveryDatabase.getInstance(this)
         
         // Enable edge-to-edge display
@@ -62,7 +69,7 @@ class MainActivity : ComponentActivity() {
         // Show version toast on startup
         Toast.makeText(
             this,
-            "Iftin Internet Delivery v5.5 ⚡",
+            "Iftin Resellers v5.6 ⚡",
             Toast.LENGTH_LONG
         ).show()
         
@@ -350,20 +357,18 @@ fun MainScreen(
                     .padding(horizontal = 20.dp, vertical = 16.dp)
             ) {
                 Text(
-                    text = tenantName.ifBlank { "INTERNET DELIVERY" }.uppercase(),
+                    text = "IFTIN RESELLERS",
                     color = Color.White,
                     fontSize = 20.sp,
                     lineHeight = 26.sp,
                     fontWeight = FontWeight.Bold
                 )
-                if (tenantName.isNotBlank()) {
-                    Text(
-                        text = "INTERNET DELIVERY",
-                        color = Color.White.copy(alpha = 0.9f),
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
+                Text(
+                    text = tenantName.ifBlank { "Ma jiro shirkad" },
+                    color = Color.White.copy(alpha = 0.92f),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically
