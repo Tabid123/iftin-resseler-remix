@@ -19,6 +19,8 @@ const DeviceManagement = lazy(() => import('@/components/admin/DeviceManagement'
 const ResellerPaymentProviders = lazy(() => import('@/components/reseller/ResellerPaymentProviders'));
 const ResellerBanners = lazy(() => import('@/components/reseller/ResellerBanners'));
 const ResellerProviders = lazy(() => import('@/components/reseller/ResellerProviders'));
+const ResellerApps = lazy(() => import('@/components/reseller/ResellerApps'));
+
 
 const TabLoader = () => (
   <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
@@ -151,6 +153,8 @@ export default function ResellerDashboard() {
             {activeTab === 'sim-pins' && <ResellerSimPins />}
             {activeTab === 'send-notification' && <SendNotification />}
             {activeTab === 'banners' && <ResellerBanners />}
+            {activeTab === 'apps' && <ResellerApps />}
+
           </Suspense>
         </main>
       </div>
