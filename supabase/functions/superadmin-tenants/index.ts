@@ -55,17 +55,28 @@ Deno.serve(async (req) => {
     if (action === "source_providers") {
       const { source_slug, tenant_id } = body;
       const slug = source_slug || "iftin";
-      const { data: src } = await supabaseAdmin
+      let { data: src } = await supabaseAdmin
         .from("tenants")
         .select("id")
         .eq("slug", slug)
         .maybeSingle();
-      if (!src) throw new Error(`Source tenant ${slug} lama helin`);
-      const { data: provs } = await supabaseAdmin
-        .from("providers_config")
-        .select("provider_name, display_order")
-        .eq("tenant_id", src.id)
-        .order("display_order", { ascending: true });
+      if (!src) {
+        // Fallback: use the oldest tenant as the provider template
+        const { data: first } = await supabaseAdmin
+          .from("tenants")
+          .select("id")
+          .order("created_at", { ascending: true })
+          .limit(1)
+          .maybeSingle();
+        src = first ?? null;
+      }
+      const { data: provs } = src
+        ? await supabaseAdmin
+            .from("providers_config")
+            .select("provider_name, display_order")
+            .eq("tenant_id", src.id)
+            .order("display_order", { ascending: true })
+        : { data: [] as any[] };
       let existing: string[] = [];
       if (tenant_id) {
         const { data: tp } = await supabaseAdmin
