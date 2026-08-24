@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Loader2, LogOut, Shield, Building2, CreditCard } from "lucide-react";
+import { Loader2, LogOut, Shield, Building2, CreditCard, Radio } from "lucide-react";
 import iftinLogo from "@/assets/iftin-logo.jpg";
 
 const SuperAdminTenants = lazy(() => import("@/components/admin/SuperAdminTenants"));
 const SubscriptionsManager = lazy(() => import("@/components/admin/SubscriptionsManager"));
+const UssdFlowsManager = lazy(() => import("@/components/admin/UssdFlowsManager"));
 
 const TabLoader = () => (
   <div className="flex justify-center items-center p-12">
@@ -99,6 +100,9 @@ export default function SuperAdminDashboard() {
                 <TabsTrigger value="subscriptions">
                   <CreditCard className="h-4 w-4 mr-2" /> Subscriptions
                 </TabsTrigger>
+                <TabsTrigger value="flows">
+                  <Radio className="h-4 w-4 mr-2" /> USSD Flows
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="tenants">
                 <Suspense fallback={<TabLoader />}>
@@ -108,6 +112,15 @@ export default function SuperAdminDashboard() {
               <TabsContent value="subscriptions">
                 <Suspense fallback={<TabLoader />}>
                   <SubscriptionsManager />
+                </Suspense>
+              </TabsContent>
+              <TabsContent value="flows">
+                <p className="mb-4 text-sm text-muted-foreground">
+                  Flow-yadan waa kuwo la wadaago shirkadaha oo dhan. Tenant walba PIN-kiisa ayuu ka
+                  badalaa dashboard-kiisa (Settings → SIM PIN); halkan waa tallaabooyinka menu-ga.
+                </p>
+                <Suspense fallback={<TabLoader />}>
+                  <UssdFlowsManager />
                 </Suspense>
               </TabsContent>
             </Tabs>
