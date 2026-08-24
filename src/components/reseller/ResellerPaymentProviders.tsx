@@ -29,6 +29,21 @@ const blank = {
   ussd_code_template: '',
 };
 
+const QUICK_PAYMENTS = [
+  {
+    provider_name: 'EVC Plus',
+    provider_logo: '/storage/payment-logos/evc.png',
+    prefix_code: '*7',
+    ussd_code_template: '*712*{number}*{amount}#',
+  },
+  {
+    provider_name: 'e-Dahab',
+    provider_logo: '/storage/payment-logos/jeeb.jpg',
+    prefix_code: '*8',
+    ussd_code_template: '*220*{number}*{amount}#',
+  },
+];
+
 export default function ResellerPaymentProviders() {
   const { currentTenantId } = useTenant();
   const [items, setItems] = useState<PaymentProvider[]>([]);
