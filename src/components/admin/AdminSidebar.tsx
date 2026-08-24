@@ -22,7 +22,7 @@ import {
   Zap,
   KeyRound,
   PhoneCall,
-  Building2,
+  Shield,
 } from "lucide-react";
 import {
   Sidebar,
