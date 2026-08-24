@@ -44,6 +44,10 @@ export default function ResellerProviders() {
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [numbers, setNumbers] = useState<Record<string, string>>({});
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [customName, setCustomName] = useState('');
+
 
   const load = async () => {
     if (!currentTenantId) return;
