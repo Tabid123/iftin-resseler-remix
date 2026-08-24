@@ -17,8 +17,9 @@ export const Route = createFileRoute("/reseller/")({
 });
 
 function RouteComponent() {
-  return 
+  return (
     <ResellerRoute>
       <ResellerDashboard />
-    </ResellerRoute>;
+    </ResellerRoute>
+  );
 }
