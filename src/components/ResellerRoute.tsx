@@ -37,12 +37,14 @@ const ResellerRoute = ({ children }: { children: React.ReactNode }) => {
       ]);
 
       const isManager = (membership ?? []).some((m: any) =>
-        MANAGER_ROLES.includes(String(m.member_role ?? m.role ?? '').toLowerCase()) && m.tenants?.status === 'active'
+        MANAGER_ROLES.includes(String(m.member_role ?? m.role ?? '').toLowerCase()) &&
+        (m.tenants?.status ?? 'active') !== 'suspended'
       );
 
       if (!active) return;
 
-      if (isManager) {
+      // Platform super admins may always enter the reseller dashboard
+      if (isManager || superRole) {
         setAllowed(true);
         setChecking(false);
         return;
@@ -53,7 +55,7 @@ const ResellerRoute = ({ children }: { children: React.ReactNode }) => {
         description: 'Kaliya maamulaha tenant-ka ayaa geli kara reseller dashboard-ka',
         variant: 'destructive',
       });
-      navigate(superRole ? '/admin' : '/reseller/login', { replace: true });
+      navigate('/reseller/login', { replace: true });
     };
 
     check();
