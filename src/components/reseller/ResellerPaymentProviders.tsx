@@ -82,6 +82,28 @@ export default function ResellerPaymentProviders() {
     load();
   };
 
+  const quickAdd = async (name: string) => {
+    if (!currentTenantId) return;
+    const preset = QUICK_PAYMENTS.find((p) => p.provider_name === name);
+    if (!preset) return;
+    if (items.some((i) => i.provider_name.toLowerCase() === name.toLowerCase())) {
+      toast({ title: 'Horey ayuu u jiray', description: `${name} horey ayaa loo daray` });
+      return;
+    }
+    setSaving(true);
+    const { error } = await supabase.from('payment_providers_config').insert([{
+      ...preset,
+      commission_rate: 0,
+      payment_number: '',
+      is_active: true,
+      tenant_id: currentTenantId,
+    }]);
+    setSaving(false);
+    if (error) { toast({ title: 'Khalad', description: error.message, variant: 'destructive' }); return; }
+    toast({ title: 'Guul', description: `${name} waa lagu daray` });
+    load();
+  };
+
   const saveEdit = async () => {
     if (!editing) return;
     const { error } = await supabase.from('payment_providers_config').update({
