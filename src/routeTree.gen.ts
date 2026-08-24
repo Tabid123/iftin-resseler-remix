@@ -22,6 +22,8 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as ResellerIndexRouteImport } from './routes/reseller/index'
 import { Route as ResellerLoginRouteImport } from './routes/reseller/login'
+import { Route as SuperadminIndexRouteImport } from './routes/superadmin/index'
+import { Route as SuperadminLoginRouteImport } from './routes/superadmin/login'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -88,6 +90,16 @@ const ResellerLoginRoute = ResellerLoginRouteImport.update({
   path: '/reseller/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuperadminIndexRoute = SuperadminIndexRouteImport.update({
+  id: '/superadmin/',
+  path: '/superadmin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuperadminLoginRoute = SuperadminLoginRouteImport.update({
+  id: '/superadmin/login',
+  path: '/superadmin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -101,8 +113,10 @@ export interface FileRoutesByFullPath {
   '/providers': typeof ProvidersRoute
   '/admin/login': typeof AdminLoginRoute
   '/reseller/login': typeof ResellerLoginRoute
+  '/superadmin/login': typeof SuperadminLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/reseller/': typeof ResellerIndexRoute
+  '/superadmin/': typeof SuperadminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -116,8 +130,10 @@ export interface FileRoutesByTo {
   '/providers': typeof ProvidersRoute
   '/admin/login': typeof AdminLoginRoute
   '/reseller/login': typeof ResellerLoginRoute
+  '/superadmin/login': typeof SuperadminLoginRoute
   '/admin': typeof AdminIndexRoute
   '/reseller': typeof ResellerIndexRoute
+  '/superadmin': typeof SuperadminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -132,8 +148,10 @@ export interface FileRoutesById {
   '/providers': typeof ProvidersRoute
   '/admin/login': typeof AdminLoginRoute
   '/reseller/login': typeof ResellerLoginRoute
+  '/superadmin/login': typeof SuperadminLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/reseller/': typeof ResellerIndexRoute
+  '/superadmin/': typeof SuperadminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -149,8 +167,10 @@ export interface FileRouteTypes {
     | '/providers'
     | '/admin/login'
     | '/reseller/login'
+    | '/superadmin/login'
     | '/admin/'
     | '/reseller/'
+    | '/superadmin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -164,8 +184,10 @@ export interface FileRouteTypes {
     | '/providers'
     | '/admin/login'
     | '/reseller/login'
+    | '/superadmin/login'
     | '/admin'
     | '/reseller'
+    | '/superadmin'
   id:
     | '__root__'
     | '/'
@@ -179,8 +201,10 @@ export interface FileRouteTypes {
     | '/providers'
     | '/admin/login'
     | '/reseller/login'
+    | '/superadmin/login'
     | '/admin/'
     | '/reseller/'
+    | '/superadmin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -195,8 +219,10 @@ export interface RootRouteChildren {
   ProvidersRoute: typeof ProvidersRoute
   AdminLoginRoute: typeof AdminLoginRoute
   ResellerLoginRoute: typeof ResellerLoginRoute
+  SuperadminLoginRoute: typeof SuperadminLoginRoute
   AdminIndexRoute: typeof AdminIndexRoute
   ResellerIndexRoute: typeof ResellerIndexRoute
+  SuperadminIndexRoute: typeof SuperadminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -292,6 +318,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResellerLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/superadmin/': {
+      id: '/superadmin/'
+      path: '/superadmin'
+      fullPath: '/superadmin/'
+      preLoaderRoute: typeof SuperadminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/superadmin/login': {
+      id: '/superadmin/login'
+      path: '/superadmin/login'
+      fullPath: '/superadmin/login'
+      preLoaderRoute: typeof SuperadminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -307,8 +347,10 @@ const rootRouteChildren: RootRouteChildren = {
   ProvidersRoute: ProvidersRoute,
   AdminLoginRoute: AdminLoginRoute,
   ResellerLoginRoute: ResellerLoginRoute,
+  SuperadminLoginRoute: SuperadminLoginRoute,
   AdminIndexRoute: AdminIndexRoute,
   ResellerIndexRoute: ResellerIndexRoute,
+  SuperadminIndexRoute: SuperadminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

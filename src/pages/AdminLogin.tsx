@@ -13,7 +13,11 @@ import iftinLogo from '@/assets/iftin-logo.jpg';
 // Supabase secrets browser-ka ma gaadho, sidaa darteed PIN code-ka ku jira
 const EMERGENCY_PIN = '5516';
 
-const AdminLogin = () => {
+interface AdminLoginProps {
+  superAdminMode?: boolean;
+}
+
+const AdminLogin = ({ superAdminMode }: AdminLoginProps) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
