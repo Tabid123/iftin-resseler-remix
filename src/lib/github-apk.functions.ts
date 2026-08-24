@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start';
 
-const REPO = 'Tabid123/remix-of-iftin-resseller-sax-ah';
+const REPO = process.env['GITHUB_REPO'] || 'Tabid123/remix-of-iftin-resseler-sax-ah';
 
 export interface ApkAsset {
   name: string;
