@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, Save, Wallet } from 'lucide-react';
+import { Loader2, Save, Wallet, Plus } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
 
 interface ProviderRow {
@@ -20,6 +20,14 @@ interface ProviderRow {
 }
 
 const ORDER = ['hormuud', 'somnet', 'somtel', 'amtel'];
+
+const DEFAULT_PROVIDERS = [
+  { provider_name: 'Hormuud', provider_logo: '/storage/logos/hormuud.jpg' },
+  { provider_name: 'Somnet', provider_logo: '/storage/logos/somnet.jpg' },
+  { provider_name: 'Somtel', provider_logo: '/storage/logos/somtel.png' },
+  { provider_name: 'Amtel', provider_logo: '/storage/logos/somlink.jpg' },
+];
+
 
 export default function ResellerProviders() {
   const { currentTenantId } = useTenant();
