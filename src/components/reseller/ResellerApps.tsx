@@ -1,54 +1,101 @@
-import { useQuery } from '@tanstack/react-query';
-import { useServerFn } from '@tanstack/react-start';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useRef, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, Download, RefreshCw, Smartphone, AlertTriangle } from 'lucide-react';
+import { Loader2, Download, RefreshCw, Smartphone, Upload, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { listApkReleases, downloadApkUrl } from '@/lib/github-apk.functions';
+import { supabase } from '@/integrations/supabase/client';
 
-const fmtSize = (b: number) => `${(b / 1024 / 1024).toFixed(1)} MB`;
-const fmtDate = (d: string) =>
-  new Date(d).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+const BUCKET = 'apps';
+
+const fmtSize = (b?: number) => (b ? `${(b / 1024 / 1024).toFixed(1)} MB` : '');
+const fmtDate = (d?: string) =>
+  d ? new Date(d).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '';
 
 export default function ResellerApps() {
-  const fetchReleases = useServerFn(listApkReleases);
-  const getDownloadUrl = useServerFn(downloadApkUrl);
+  const qc = useQueryClient();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
 
-  const { data, isLoading, isError, refetch, isFetching } = useQuery({
-    queryKey: ['apk-releases'],
-    queryFn: () => fetchReleases(),
-    refetchInterval: 60_000,
-    staleTime: 30_000,
+  const { data: files = [], isLoading, isFetching, refetch } = useQuery({
+    queryKey: ['manual-apks'],
+    queryFn: async () => {
+      const { data, error } = await supabase.storage
+        .from(BUCKET)
+        .list('', { limit: 100, sortBy: { column: 'created_at', order: 'desc' } });
+      if (error) throw error;
+      return (data ?? []).filter((f) => f.name !== '.emptyFolderPlaceholder');
+    },
   });
 
-  const releases = data?.releases ?? [];
-
-  const handleDownload = async (assetUrl: string, name: string) => {
+  const handleUpload = async (file: File) => {
+    setUploading(true);
     try {
-      const res = await getDownloadUrl({ data: { assetUrl } });
-      if (!res.url) throw new Error('no url');
-      window.open(res.url, '_blank', 'noopener');
-    } catch {
-      toast.error(`Lama soo dejin karin ${name}`);
+      const { error } = await supabase.storage.from(BUCKET).upload(file.name, file, {
+        upsert: true,
+        contentType: file.type || 'application/vnd.android.package-archive',
+      });
+      if (error) throw error;
+      toast.success('App-ka waa la geliyay');
+      qc.invalidateQueries({ queryKey: ['manual-apks'] });
+    } catch (e: any) {
+      toast.error(e?.message ?? 'Lama gelin karin');
+    } finally {
+      setUploading(false);
+      if (inputRef.current) inputRef.current.value = '';
     }
+  };
+
+  const handleDownload = async (name: string) => {
+    const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(name, 60 * 60, {
+      download: name,
+    });
+    if (error || !data?.signedUrl) return toast.error('Lama soo dejin karin');
+    window.open(data.signedUrl, '_blank', 'noopener');
+  };
+
+  const handleDelete = async (name: string) => {
+    const { error } = await supabase.storage.from(BUCKET).remove([name]);
+    if (error) return toast.error('Lama tirtiri karin');
+    toast.success('Waa la tirtiray');
+    qc.invalidateQueries({ queryKey: ['manual-apks'] });
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h2 className="flex items-center gap-2 text-2xl font-bold text-foreground">
             <Smartphone className="h-6 w-6 text-primary" /> Apps
           </h2>
           <p className="text-sm text-muted-foreground">
-            APK-yada GitHub Actions dhisay si otomaatig ah halkan ayay uga soo muuqdaan.
+            APK-yada gacanta ku gali (upload) halkan, kadibna waa la soo dejisan karaa.
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
-          <RefreshCw className={`mr-2 h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
-          Cusboonaysii
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
+            <RefreshCw className={`mr-2 h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
+            Cusboonaysii
+          </Button>
+          <Button size="sm" onClick={() => inputRef.current?.click()} disabled={uploading}>
+            {uploading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Upload className="mr-2 h-4 w-4" />
+            )}
+            Geli APK
+          </Button>
+          <input
+            ref={inputRef}
+            type="file"
+            accept=".apk,application/vnd.android.package-archive"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleUpload(f);
+            }}
+          />
+        </div>
       </div>
 
       {isLoading && (
@@ -57,50 +104,32 @@ export default function ResellerApps() {
         </div>
       )}
 
-      {(isError || data?.error) && (
-        <Card>
-          <CardContent className="flex items-center gap-3 py-6 text-sm text-muted-foreground">
-            <AlertTriangle className="h-5 w-5 text-destructive" />
-            {data?.error ?? 'Lama soo saari karin liiska APK-yada.'}
-          </CardContent>
-        </Card>
-      )}
-
-      {!isLoading && !data?.error && releases.length === 0 && (
+      {!isLoading && files.length === 0 && (
         <Card>
           <CardContent className="py-10 text-center text-sm text-muted-foreground">
-            Weli APK lama dhisin. Marka workflow-ka "Build Android APK" uu dhammaado, APK-gu
-            halkan ayuu si otomaatig ah uga soo muuqan doonaa.
+            Weli APK lama gelin. Riix "Geli APK" si aad u soo gudbiso app-kaaga.
           </CardContent>
         </Card>
       )}
 
       <div className="grid gap-4 md:grid-cols-2">
-        {releases.map((rel) => (
-          <Card key={rel.tag}>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center justify-between gap-2 text-base">
-                <span className="truncate">{rel.name}</span>
-                <Badge variant={rel.prerelease ? 'secondary' : 'default'}>
-                  {rel.prerelease ? 'Debug' : 'Release'}
-                </Badge>
-              </CardTitle>
-              <p className="text-xs text-muted-foreground">{fmtDate(rel.publishedAt)}</p>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {rel.assets.map((a) => (
-                <button
-                  key={a.name}
-                  onClick={() => handleDownload(a.url, a.name)}
-                  className="flex w-full items-center justify-between gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:bg-accent"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium">{a.name}</p>
-                    <p className="text-xs text-muted-foreground">{fmtSize(a.size)}</p>
-                  </div>
-                  <Download className="h-4 w-4 shrink-0 text-primary" />
-                </button>
-              ))}
+        {files.map((f) => (
+          <Card key={f.name}>
+            <CardContent className="flex items-center justify-between gap-3 p-4">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">{f.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {fmtSize((f.metadata as any)?.size)} · {fmtDate(f.created_at as string)}
+                </p>
+              </div>
+              <div className="flex shrink-0 gap-1">
+                <Button variant="ghost" size="icon" onClick={() => handleDownload(f.name)}>
+                  <Download className="h-4 w-4 text-primary" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => handleDelete(f.name)}>
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}
