@@ -205,11 +205,11 @@ export default function TenantDetailDialog({ tenantId, open, onOpenChange, onCha
                 </Button>
               </div>
               <div className="flex gap-2">
-                <Input readOnly value={`${PUBLIC_BASE}/admin/login`} className="font-mono text-xs" />
+                <Input readOnly value={`${PUBLIC_BASE}/reseller`} className="font-mono text-xs" />
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => copy(`${PUBLIC_BASE}/admin/login`, "Admin link-ga")}
+                  onClick={() => copy(`${PUBLIC_BASE}/reseller`, "Admin link-ga")}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
