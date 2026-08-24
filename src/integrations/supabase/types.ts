@@ -2878,6 +2878,7 @@ export type Database = {
       }
       current_delivery_tenant: { Args: never; Returns: string }
       current_tenant_id: { Args: never; Returns: string }
+      default_tenant_id: { Args: never; Returns: string }
       expire_tenant_subscriptions: { Args: never; Returns: Json }
       force_delete_provider: { Args: { p_provider_id: string }; Returns: Json }
       generate_daily_outreach_targets: {
