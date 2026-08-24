@@ -31,11 +31,32 @@ const ResellerLogin = () => {
       });
       if (error) throw error;
 
-      const { data: memberships, error: memErr } = await supabase
-        .from('tenant_members')
-        .select('tenant_id, member_role, role, tenants(status)')
-        .eq('user_id', data.user.id);
+      const [{ data: memberships, error: memErr }, { data: superRole, error: roleErr }] = await Promise.all([
+        supabase
+          .from('tenant_members')
+          .select('tenant_id, member_role, role, tenants(status)')
+          .eq('user_id', data.user.id),
+        supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', data.user.id)
+          .eq('role', 'super_admin')
+          .limit(1)
+          .maybeSingle(),
+      ]);
       if (memErr) throw memErr;
+      if (roleErr) throw roleErr;
+
+      if (superRole) {
+        await supabase.auth.signOut();
+        toast({
+          title: 'Super admin',
+          description: 'Super admin-ku halkan kama galo. Isticmaal /superadmin/login.',
+          variant: 'destructive',
+        });
+        navigate('/superadmin/login', { replace: true });
+        return;
+      }
 
       const manager = (memberships ?? []).find((m: any) =>
         MANAGER_ROLES.includes(String(m.member_role ?? m.role ?? '').toLowerCase()) &&
@@ -43,24 +64,12 @@ const ResellerLogin = () => {
       );
 
       if (!manager?.tenant_id) {
-        const { data: superRole } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', data.user.id)
-          .in('role', ['admin', 'super_admin'])
-          .limit(1)
-          .maybeSingle();
-        if (!superRole) {
-          await supabase.auth.signOut();
-          toast({
-            title: 'Ma lihid fasax',
-            description: 'Koontadan reseller firfircoon kuma xirna',
-            variant: 'destructive',
-          });
-          return;
-        }
-        toast({ title: 'Guul', description: 'Dashboard-ka reseller-ka waa la furay' });
-        navigate('/reseller', { replace: true });
+        await supabase.auth.signOut();
+        toast({
+          title: 'Ma lihid fasax',
+          description: 'Koontadan reseller firfircoon kuma xirna',
+          variant: 'destructive',
+        });
         return;
       }
 
