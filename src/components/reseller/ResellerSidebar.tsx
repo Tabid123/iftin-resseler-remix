@@ -14,6 +14,7 @@ import {
   ChevronRight,
   LogOut,
   Building2,
+  Settings,
 } from 'lucide-react';
 import { NavLink } from "@/lib/router-compat";
 import { useTenant } from '@/contexts/TenantContext';
