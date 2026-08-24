@@ -22,7 +22,7 @@ import {
   Zap,
   KeyRound,
   PhoneCall,
-  Building2,
+  Shield,
 } from "lucide-react";
 import {
   Sidebar,
@@ -89,9 +89,6 @@ const navItems: NavItem[] = [
   { title: "USSD Learning", titleSo: "🧠 USSD Learning", value: "ussd-learning", icon: PhoneCall, permission: "manage_settings" },
   { title: "Contact Messages", titleSo: "📨 Nala Soo Xiriir", value: "contact-messages", icon: MessageSquare, permission: "manage_settings" },
   { title: "Settings", titleSo: "⚙️ Settings", value: "settings", icon: Settings, permission: "manage_settings" },
-  { title: "Tenants (SaaS)", titleSo: "🏢 Tenants (SaaS)", value: "super-admin", icon: Building2, permission: "__super_admin__" },
-  { title: "Subscriptions", titleSo: "💳 Lacagta Subscription", value: "subscriptions", icon: Building2, permission: "__super_admin__" },
-
 ];
 
 interface AdminSidebarProps {
@@ -152,6 +149,18 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
         <div className="px-2 pt-2">
           <TenantSwitcher collapsed={collapsed && !isMobile} />
         </div>
+        {isSuperAdmin && (
+          <div className="px-2 pb-1">
+            <a
+              href="/superadmin"
+              className="flex items-center gap-2 rounded-md bg-primary/10 px-2 py-2 text-sm font-medium text-primary hover:bg-primary/20"
+              title="Super Admin"
+            >
+              <Shield className="h-4 w-4" />
+              {!collapsed && <span>{language === 'so' ? 'Super Admin' : 'Super Admin'}</span>}
+            </a>
+          </div>
+        )}
         <div className="px-2 pb-1">
           <a
             href="/reseller"

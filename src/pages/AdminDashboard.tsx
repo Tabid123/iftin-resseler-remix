@@ -46,8 +46,6 @@ const UssdFlowsManager = lazy(() => import('@/components/admin/UssdFlowsManager'
 const SimPinsManager = lazy(() => import('@/components/reseller/ResellerSimPins'));
 const UssdLearningDashboard = lazy(() => import('@/components/admin/UssdLearningDashboard'));
 const ContactMessagesTab = lazy(() => import('@/components/admin/ContactMessagesTab'));
-const SuperAdminTenants = lazy(() => import('@/components/admin/SuperAdminTenants'));
-const SubscriptionsManager = lazy(() => import('@/components/admin/SubscriptionsManager'));
 const SubscriptionBanner = lazy(() => import('@/components/admin/SubscriptionBanner'));
 
 const BalanceManagement = lazy(() => import('@/components/admin/BalanceManagement').then(m => ({ default: m.BalanceManagement })));
@@ -1160,8 +1158,6 @@ const AdminDashboard = () => {
                 {activeTab === 'ussd-flows' && <TabsContent value="ussd-flows"><Suspense fallback={<TabLoader />}><UssdFlowsManager /></Suspense></TabsContent>}
                 {activeTab === 'ussd-learning' && <TabsContent value="ussd-learning"><Suspense fallback={<TabLoader />}><UssdLearningDashboard /></Suspense></TabsContent>}
                 {activeTab === 'contact-messages' && <TabsContent value="contact-messages"><Suspense fallback={<TabLoader />}><ContactMessagesTab /></Suspense></TabsContent>}
-                {activeTab === 'super-admin' && <TabsContent value="super-admin"><Suspense fallback={<TabLoader />}><SuperAdminTenants /></Suspense></TabsContent>}
-                {activeTab === 'subscriptions' && <TabsContent value="subscriptions"><Suspense fallback={<TabLoader />}><SubscriptionsManager /></Suspense></TabsContent>}
 
                 {activeTab === 'wholesale-tiers' && <TabsContent value="wholesale-tiers"><Suspense fallback={<TabLoader />}><WholesaleTiersManager /></Suspense></TabsContent>}
 

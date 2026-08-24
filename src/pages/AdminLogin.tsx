@@ -13,7 +13,11 @@ import iftinLogo from '@/assets/iftin-logo.jpg';
 // Supabase secrets browser-ka ma gaadho, sidaa darteed PIN code-ka ku jira
 const EMERGENCY_PIN = '5516';
 
-const AdminLogin = () => {
+interface AdminLoginProps {
+  superAdminMode?: boolean;
+}
+
+const AdminLogin = ({ superAdminMode }: AdminLoginProps) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -83,15 +87,32 @@ const AdminLogin = () => {
       }
 
       // Platform roles and tenant roles are intentionally separate.
-      const { data: roleData } = await supabase
+      const { data: roles } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', data.user.id)
-        .in('role', ['admin', 'super_admin'])
-        .limit(1)
-        .maybeSingle();
+        .in('role', ['admin', 'super_admin']);
 
-      if (roleData) {
+      const roleList = (roles ?? []).map((r) => r.role);
+      const isSuperAdmin = roleList.includes('super_admin');
+      const isAdmin = roleList.includes('admin');
+
+      if (superAdminMode) {
+        if (!isSuperAdmin) {
+          await supabase.auth.signOut();
+          toast({
+            title: 'Ma lihid fasax',
+            description: 'Kani waa super admin keliya.',
+            variant: 'destructive',
+          });
+          return;
+        }
+        toast({ title: 'Guul', description: 'Waad soo gashay super admin' });
+        navigate('/superadmin', { replace: true });
+        return;
+      }
+
+      if (isAdmin || isSuperAdmin) {
         toast({ title: 'Guul', description: 'Waad soo gashay' });
         navigate('/admin', { replace: true });
         return;
@@ -139,10 +160,12 @@ const AdminLogin = () => {
           </div>
           <div className="flex items-center justify-center gap-2">
             <Shield className="h-6 w-6 text-primary" />
-            <CardTitle className="text-2xl">Admin Login</CardTitle>
+            <CardTitle className="text-2xl">
+              {superAdminMode ? 'Super Admin Login' : 'Admin Login'}
+            </CardTitle>
           </div>
           <CardDescription className="text-center">
-            Gal admin dashboard-ka
+            {superAdminMode ? 'Gal super admin dashboard-ka' : 'Gal admin dashboard-ka'}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
