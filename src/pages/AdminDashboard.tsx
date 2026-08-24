@@ -1107,7 +1107,9 @@ const AdminDashboard = () => {
 
           <main className="flex-1 p-4 md:p-8 overflow-auto">
             <div className="max-w-7xl mx-auto">
+              <Suspense fallback={null}><SubscriptionBanner /></Suspense>
               <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="dashboard" className="space-y-6">
+
 
                 {/* Dashboard Tab */}
                 {activeTab === 'dashboard' && (
