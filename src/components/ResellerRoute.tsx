@@ -8,7 +8,7 @@ const MANAGER_ROLES = ['owner', 'admin', 'manager'];
 
 /**
  * Guards /reseller: only a signed-in user who is owner/admin of a tenant
- * (or a platform super admin) may enter.
+ * may enter. Platform super admins must use /superadmin instead.
  */
 const ResellerRoute = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const ResellerRoute = ({ children }: { children: React.ReactNode }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { navigate('/reseller/login', { replace: true }); return; }
 
-      const [{ data: membership }, { data: superRole }] = await Promise.all([
+      const [{ data: membership, error: membershipError }, { data: superRole }] = await Promise.all([
         supabase
           .from('tenant_members')
           .select('member_role, role, tenant_id, tenants(status)')
@@ -36,15 +36,34 @@ const ResellerRoute = ({ children }: { children: React.ReactNode }) => {
           .maybeSingle(),
       ]);
 
+      if (!active) return;
+
+      if (superRole) {
+        toast({
+          title: 'Super admin',
+          description: 'Super admin-ku reseller dashboard ma geli karo. Isticmaal /superadmin.',
+          variant: 'destructive',
+        });
+        navigate('/superadmin', { replace: true });
+        return;
+      }
+
+      if (membershipError) {
+        toast({
+          title: 'Khalad',
+          description: 'Xogta reseller-ka lama xaqiijin karin. Fadlan mar kale isku day.',
+          variant: 'destructive',
+        });
+        navigate('/reseller/login', { replace: true });
+        return;
+      }
+
       const isManager = (membership ?? []).some((m: any) =>
         MANAGER_ROLES.includes(String(m.member_role ?? m.role ?? '').toLowerCase()) &&
         (m.tenants?.status ?? 'active') !== 'suspended'
       );
 
-      if (!active) return;
-
-      // Platform super admins may always enter the reseller dashboard
-      if (isManager || superRole) {
+      if (isManager) {
         setAllowed(true);
         setChecking(false);
         return;
