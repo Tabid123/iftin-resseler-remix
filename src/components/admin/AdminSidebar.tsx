@@ -89,9 +89,6 @@ const navItems: NavItem[] = [
   { title: "USSD Learning", titleSo: "🧠 USSD Learning", value: "ussd-learning", icon: PhoneCall, permission: "manage_settings" },
   { title: "Contact Messages", titleSo: "📨 Nala Soo Xiriir", value: "contact-messages", icon: MessageSquare, permission: "manage_settings" },
   { title: "Settings", titleSo: "⚙️ Settings", value: "settings", icon: Settings, permission: "manage_settings" },
-  { title: "Tenants (SaaS)", titleSo: "🏢 Tenants (SaaS)", value: "super-admin", icon: Building2, permission: "__super_admin__" },
-  { title: "Subscriptions", titleSo: "💳 Lacagta Subscription", value: "subscriptions", icon: Building2, permission: "__super_admin__" },
-
 ];
 
 interface AdminSidebarProps {
