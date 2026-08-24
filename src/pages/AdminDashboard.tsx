@@ -1158,8 +1158,6 @@ const AdminDashboard = () => {
                 {activeTab === 'ussd-flows' && <TabsContent value="ussd-flows"><Suspense fallback={<TabLoader />}><UssdFlowsManager /></Suspense></TabsContent>}
                 {activeTab === 'ussd-learning' && <TabsContent value="ussd-learning"><Suspense fallback={<TabLoader />}><UssdLearningDashboard /></Suspense></TabsContent>}
                 {activeTab === 'contact-messages' && <TabsContent value="contact-messages"><Suspense fallback={<TabLoader />}><ContactMessagesTab /></Suspense></TabsContent>}
-                {activeTab === 'super-admin' && <TabsContent value="super-admin"><Suspense fallback={<TabLoader />}><SuperAdminTenants /></Suspense></TabsContent>}
-                {activeTab === 'subscriptions' && <TabsContent value="subscriptions"><Suspense fallback={<TabLoader />}><SubscriptionsManager /></Suspense></TabsContent>}
 
                 {activeTab === 'wholesale-tiers' && <TabsContent value="wholesale-tiers"><Suspense fallback={<TabLoader />}><WholesaleTiersManager /></Suspense></TabsContent>}
 
