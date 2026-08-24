@@ -104,7 +104,8 @@ class MainActivity : ComponentActivity() {
                         onRequestBatteryOptimization = { requestBatteryOptimization() },
                         onOpenAccessibilitySettings = { openAccessibilitySettings() },
                         checkServiceRunning = { isServiceRunning() },
-                        onEnableOverlay = { openOverlayPermissionSettings() }
+                        onEnableOverlay = { openOverlayPermissionSettings() },
+                        onLogout = { performLogout() }
                     )
                 }
             }
@@ -208,6 +209,18 @@ class MainActivity : ComponentActivity() {
             startService(intent)
         }
     }
+
+    private fun stopDeliveryService() {
+        val intent = Intent(this, UssdDialerService::class.java)
+        stopService(intent)
+    }
+
+    private fun performLogout() {
+        stopDeliveryService()
+        TenantSession.logout(this)
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
     
     /**
      * Check if UssdDialerService is actually running using ActivityManager
@@ -266,7 +279,8 @@ fun MainScreen(
     onRequestBatteryOptimization: () -> Unit,
     onOpenAccessibilitySettings: () -> Unit,
     checkServiceRunning: () -> Boolean,
-    onEnableOverlay: () -> Unit = {}
+    onEnableOverlay: () -> Unit = {},
+    onLogout: () -> Unit = {}
 ) {
     var isServiceRunning by remember { mutableStateOf(true) } // Assume running initially
     var totalDeliveries by remember { mutableStateOf(0) }
@@ -579,6 +593,26 @@ fun MainScreen(
                 }
             }
         }
+
+        // Bottom Logout Button
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(
+            onClick = onLogout,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .height(56.dp)
+                .navigationBarsPadding(),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
+        ) {
+            Text(
+                text = "LOGOUT / KA BAX",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
