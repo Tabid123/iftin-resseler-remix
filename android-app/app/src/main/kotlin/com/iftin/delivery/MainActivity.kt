@@ -209,6 +209,18 @@ class MainActivity : ComponentActivity() {
             startService(intent)
         }
     }
+
+    private fun stopDeliveryService() {
+        val intent = Intent(this, UssdDialerService::class.java)
+        stopService(intent)
+    }
+
+    private fun performLogout() {
+        stopDeliveryService()
+        TenantSession.logout(this)
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
     
     /**
      * Check if UssdDialerService is actually running using ActivityManager
