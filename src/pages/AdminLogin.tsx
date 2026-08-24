@@ -87,15 +87,32 @@ const AdminLogin = ({ superAdminMode }: AdminLoginProps) => {
       }
 
       // Platform roles and tenant roles are intentionally separate.
-      const { data: roleData } = await supabase
+      const { data: roles } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', data.user.id)
-        .in('role', ['admin', 'super_admin'])
-        .limit(1)
-        .maybeSingle();
+        .in('role', ['admin', 'super_admin']);
 
-      if (roleData) {
+      const roleList = (roles ?? []).map((r) => r.role);
+      const isSuperAdmin = roleList.includes('super_admin');
+      const isAdmin = roleList.includes('admin');
+
+      if (superAdminMode) {
+        if (!isSuperAdmin) {
+          await supabase.auth.signOut();
+          toast({
+            title: 'Ma lihid fasax',
+            description: 'Kani waa super admin keliya.',
+            variant: 'destructive',
+          });
+          return;
+        }
+        toast({ title: 'Guul', description: 'Waad soo gashay super admin' });
+        navigate('/superadmin', { replace: true });
+        return;
+      }
+
+      if (isAdmin || isSuperAdmin) {
         toast({ title: 'Guul', description: 'Waad soo gashay' });
         navigate('/admin', { replace: true });
         return;
