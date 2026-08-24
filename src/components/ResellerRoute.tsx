@@ -31,7 +31,7 @@ const ResellerRoute = ({ children }: { children: React.ReactNode }) => {
           .from('user_roles')
           .select('role')
           .eq('user_id', user.id)
-          .in('role', ['admin', 'super_admin'])
+          .eq('role', 'super_admin')
           .limit(1)
           .maybeSingle(),
       ]);
@@ -58,12 +58,14 @@ const ResellerRoute = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      const isManager = (membership ?? []).some((m: any) =>
+      const manager = (membership ?? []).find((m: any) =>
         MANAGER_ROLES.includes(String(m.member_role ?? m.role ?? '').toLowerCase()) &&
         (m.tenants?.status ?? 'active') !== 'suspended'
       );
 
-      if (isManager) {
+      if (manager?.tenant_id) {
+        localStorage.setItem('active_tenant_id', manager.tenant_id);
+        localStorage.removeItem('public_tenant_slug');
         setAllowed(true);
         setChecking(false);
         return;
@@ -74,6 +76,7 @@ const ResellerRoute = ({ children }: { children: React.ReactNode }) => {
         description: 'Kaliya maamulaha tenant-ka ayaa geli kara reseller dashboard-ka',
         variant: 'destructive',
       });
+      await supabase.auth.signOut();
       navigate('/reseller/login', { replace: true });
     };
 
