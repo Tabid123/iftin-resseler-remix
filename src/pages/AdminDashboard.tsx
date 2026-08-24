@@ -47,6 +47,9 @@ const SimPinsManager = lazy(() => import('@/components/reseller/ResellerSimPins'
 const UssdLearningDashboard = lazy(() => import('@/components/admin/UssdLearningDashboard'));
 const ContactMessagesTab = lazy(() => import('@/components/admin/ContactMessagesTab'));
 const SuperAdminTenants = lazy(() => import('@/components/admin/SuperAdminTenants'));
+const SubscriptionsManager = lazy(() => import('@/components/admin/SubscriptionsManager'));
+const SubscriptionBanner = lazy(() => import('@/components/admin/SubscriptionBanner'));
+
 const BalanceManagement = lazy(() => import('@/components/admin/BalanceManagement').then(m => ({ default: m.BalanceManagement })));
 const PackageDeliveryRules = lazy(() => import('@/components/admin/PackageDeliveryRules').then(m => ({ default: m.PackageDeliveryRules })));
 const DailyOrdersManager = lazy(() => import('@/components/admin/DailyOrdersManager').then(m => ({ default: m.DailyOrdersManager })));
@@ -1104,7 +1107,9 @@ const AdminDashboard = () => {
 
           <main className="flex-1 p-4 md:p-8 overflow-auto">
             <div className="max-w-7xl mx-auto">
+              <Suspense fallback={null}><SubscriptionBanner /></Suspense>
               <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="dashboard" className="space-y-6">
+
 
                 {/* Dashboard Tab */}
                 {activeTab === 'dashboard' && (
@@ -1156,6 +1161,8 @@ const AdminDashboard = () => {
                 {activeTab === 'ussd-learning' && <TabsContent value="ussd-learning"><Suspense fallback={<TabLoader />}><UssdLearningDashboard /></Suspense></TabsContent>}
                 {activeTab === 'contact-messages' && <TabsContent value="contact-messages"><Suspense fallback={<TabLoader />}><ContactMessagesTab /></Suspense></TabsContent>}
                 {activeTab === 'super-admin' && <TabsContent value="super-admin"><Suspense fallback={<TabLoader />}><SuperAdminTenants /></Suspense></TabsContent>}
+                {activeTab === 'subscriptions' && <TabsContent value="subscriptions"><Suspense fallback={<TabLoader />}><SubscriptionsManager /></Suspense></TabsContent>}
+
                 {activeTab === 'wholesale-tiers' && <TabsContent value="wholesale-tiers"><Suspense fallback={<TabLoader />}><WholesaleTiersManager /></Suspense></TabsContent>}
 
                 {/* Self-contained data tabs */}
