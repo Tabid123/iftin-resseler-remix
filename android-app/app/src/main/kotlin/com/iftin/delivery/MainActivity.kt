@@ -593,6 +593,26 @@ fun MainScreen(
                 }
             }
         }
+
+        // Bottom Logout Button
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(
+            onClick = onLogout,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .height(56.dp)
+                .navigationBarsPadding(),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
+        ) {
+            Text(
+                text = "LOGOUT / KA BAX",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
