@@ -279,7 +279,8 @@ fun MainScreen(
     onRequestBatteryOptimization: () -> Unit,
     onOpenAccessibilitySettings: () -> Unit,
     checkServiceRunning: () -> Boolean,
-    onEnableOverlay: () -> Unit = {}
+    onEnableOverlay: () -> Unit = {},
+    onLogout: () -> Unit = {}
 ) {
     var isServiceRunning by remember { mutableStateOf(true) } // Assume running initially
     var totalDeliveries by remember { mutableStateOf(0) }
