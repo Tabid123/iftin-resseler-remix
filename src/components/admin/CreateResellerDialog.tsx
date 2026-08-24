@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { Loader2, Building2 } from "lucide-react";
+import { Loader2, Building2, Image as ImageIcon } from "lucide-react";
 import ProviderClonePicker from "./ProviderClonePicker";
 
 interface Props {
@@ -26,11 +26,14 @@ export default function CreateResellerDialog({ open, onOpenChange, onCreated }: 
   const [primary, setPrimary] = useState("#0f172a");
   const [secondary, setSecondary] = useState("#ffffff");
   const [providers, setProviders] = useState<string[]>([]);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   const reset = () => {
     setName(""); setSlug(""); setEmail(""); setPassword("");
     setPrimary("#0f172a"); setSecondary("#ffffff"); setProviders([]);
+    setLogoFile(null); setLogoPreview(null);
   };
 
   const submit = async () => {
@@ -54,6 +57,24 @@ export default function CreateResellerDialog({ open, onOpenChange, onCreated }: 
       if (error || data?.error) throw new Error(data?.error || error?.message || "Lama abuurin");
 
       const tenantId = data.tenant?.id as string;
+
+      if (logoFile && tenantId) {
+        const ext = (logoFile.name.split(".").pop() || "png").toLowerCase();
+        const path = `${tenantId}/logo-${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from("tenant-logos")
+          .upload(path, logoFile, { upsert: true, cacheControl: "3600" });
+        if (upErr) {
+          toast.error(`Logo-ga lama gelin: ${upErr.message}`);
+        } else {
+          const { error: tErr } = await supabase
+            .from("tenants")
+            .update({ logo_url: path })
+            .eq("id", tenantId);
+          if (tErr) toast.error(`Logo-ga lama xirin: ${tErr.message}`);
+        }
+      }
+
       if (providers.length > 0 && tenantId) {
         const { data: res, error: rpcErr } = await supabase.rpc("clone_tenant_providers", {
           _target_tenant: tenantId,
@@ -115,6 +136,31 @@ export default function CreateResellerDialog({ open, onOpenChange, onCreated }: 
               <Input value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
           </div>
+          <div className="space-y-2">
+            <Label>Logo-ga shirkadda</Label>
+            <div className="flex items-center gap-3">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-muted">
+                {logoPreview ? (
+                  <img src={logoPreview} alt="Logo preview" className="h-full w-full object-contain" />
+                ) : (
+                  <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                )}
+              </div>
+              <div className="flex-1 space-y-1">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0] ?? null;
+                    setLogoFile(f);
+                    setLogoPreview(f ? URL.createObjectURL(f) : null);
+                  }}
+                />
+                <p className="text-xs text-muted-foreground">PNG ama JPG — ikhtiyaari.</p>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label>Primary color</Label>
