@@ -160,10 +160,12 @@ const AdminLogin = ({ superAdminMode }: AdminLoginProps) => {
           </div>
           <div className="flex items-center justify-center gap-2">
             <Shield className="h-6 w-6 text-primary" />
-            <CardTitle className="text-2xl">Admin Login</CardTitle>
+            <CardTitle className="text-2xl">
+              {superAdminMode ? 'Super Admin Login' : 'Admin Login'}
+            </CardTitle>
           </div>
           <CardDescription className="text-center">
-            Gal admin dashboard-ka
+            {superAdminMode ? 'Gal super admin dashboard-ka' : 'Gal admin dashboard-ka'}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
