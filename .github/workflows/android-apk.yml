@@ -44,24 +44,42 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Decode keystore (optional secret)
+      - name: Prepare signing keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-        run: |
-          if [ -n "$KEYSTORE_BASE64" ]; then
-            mkdir -p app/keystore
-            echo "$KEYSTORE_BASE64" | base64 -d > app/keystore/release.keystore
-            echo "Using keystore from secrets"
-          else
-            echo "Using repo keystore"
-          fi
-
-      - name: Build Release APK
-        env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          mkdir -p app/keystore
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > app/keystore/release.keystore
+            echo "Using keystore from secrets"
+            exit 0
+          fi
+          STORE_PW="${KEYSTORE_PASSWORD:-android}"
+          ALIAS="${KEY_ALIAS:-release}"
+          KEY_PW="${KEY_PASSWORD:-android}"
+          # The committed keystore has an unknown key password — always mint a fresh one
+          echo "Generating CI signing keystore"
+          rm -f app/keystore/release.keystore
+          keytool -genkeypair -v \
+            -keystore app/keystore/release.keystore \
+            -storetype PKCS12 \
+            -storepass "$STORE_PW" -keypass "$KEY_PW" \
+            -alias "$ALIAS" -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=Iftin Delivery, OU=Iftin, O=Iftin, L=Mogadishu, S=Banadir, C=SO"
+
+
+
+      - name: Build Release APK
+        env:
+          # Fall back to the CI keystore defaults; empty strings break Gradle signing
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'android' }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS || 'release' }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD || 'android' }}
         run: ./gradlew assembleRelease --no-daemon --stacktrace
+
 
       - name: Collect APKs
         run: |

@@ -24,7 +24,7 @@ export interface ApkListResult {
 
 export const listApkReleases = createServerFn({ method: 'GET' }).handler(
   async (): Promise<ApkListResult> => {
-    const token = process.env['GITHUB_TOKEN'];
+    const token = process.env['GITHUB_PERSONAL_ACCESS_TOKEN'] || process.env['GITHUB_TOKEN'];
     const headers: Record<string, string> = {
       Accept: 'application/vnd.github+json',
       'User-Agent': 'iftin-reseller',
@@ -75,7 +75,7 @@ export const downloadApkUrl = createServerFn({ method: 'GET' })
     return data;
   })
   .handler(async ({ data }): Promise<{ url: string | null }> => {
-    const token = process.env['GITHUB_TOKEN'];
+    const token = process.env['GITHUB_PERSONAL_ACCESS_TOKEN'] || process.env['GITHUB_TOKEN'];
     const res = await fetch(data.assetUrl, {
       headers: {
         Accept: 'application/octet-stream',
