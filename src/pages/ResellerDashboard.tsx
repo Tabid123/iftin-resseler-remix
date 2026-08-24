@@ -65,7 +65,7 @@ export default function ResellerDashboard() {
   useEffect(() => {
     const check = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { navigate('/admin/login'); return; }
+      if (!session) { navigate('/reseller/login', { replace: true }); return; }
       setChecking(false);
     };
     check();
@@ -73,7 +73,7 @@ export default function ResellerDashboard() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate('/admin/login');
+    navigate('/reseller/login', { replace: true });
   };
 
   const changeTab = (v: string) => {

@@ -50,11 +50,10 @@ const ResellerLogin = () => {
       if (superRole) {
         await supabase.auth.signOut();
         toast({
-          title: 'Super admin',
-          description: 'Super admin-ku halkan kama galo. Isticmaal /superadmin/login.',
+          title: 'Ma lihid fasax',
+          description: 'Halkan waxaa geli kara oo keliya reseller-ka. Geli xogta reseller-ka.',
           variant: 'destructive',
         });
-        navigate('/superadmin/login', { replace: true });
         return;
       }
 
