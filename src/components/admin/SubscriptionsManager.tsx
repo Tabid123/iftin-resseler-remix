@@ -239,7 +239,7 @@ export default function SubscriptionsManager() {
               {saving ? "Waa la diiwaangelinayaa..." : "Diiwaangeli"}
             </Button>
           </DialogFooter>
-        </DialogFooter>
+
         </DialogContent>
       </Dialog>
     </div>
