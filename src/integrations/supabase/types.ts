@@ -2208,6 +2208,118 @@ export type Database = {
           },
         ]
       }
+      tenant_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          method: string
+          note: string | null
+          paid_at: string
+          period_end: string | null
+          period_start: string | null
+          plan: string
+          recorded_by: string | null
+          reference: string | null
+          tenant_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          method?: string
+          note?: string | null
+          paid_at?: string
+          period_end?: string | null
+          period_start?: string | null
+          plan: string
+          recorded_by?: string | null
+          reference?: string | null
+          tenant_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          method?: string
+          note?: string | null
+          paid_at?: string
+          period_end?: string | null
+          period_start?: string | null
+          plan?: string
+          recorded_by?: string | null
+          reference?: string | null
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_payments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_subscriptions: {
+        Row: {
+          amount: number
+          auto_suspend: boolean
+          created_at: string
+          currency: string
+          current_period_end: string | null
+          grace_days: number
+          id: string
+          notes: string | null
+          plan: string
+          status: string
+          tenant_id: string
+          trial_ends_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          auto_suspend?: boolean
+          created_at?: string
+          currency?: string
+          current_period_end?: string | null
+          grace_days?: number
+          id?: string
+          notes?: string | null
+          plan?: string
+          status?: string
+          tenant_id: string
+          trial_ends_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          auto_suspend?: boolean
+          created_at?: string
+          currency?: string
+          current_period_end?: string | null
+          grace_days?: number
+          id?: string
+          notes?: string | null
+          plan?: string
+          status?: string
+          tenant_id?: string
+          trial_ends_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_subscriptions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: true
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenants: {
         Row: {
           contact_phone: string | null
@@ -2760,6 +2872,7 @@ export type Database = {
       }
       current_delivery_tenant: { Args: never; Returns: string }
       current_tenant_id: { Args: never; Returns: string }
+      expire_tenant_subscriptions: { Args: never; Returns: Json }
       force_delete_provider: { Args: { p_provider_id: string }; Returns: Json }
       generate_daily_outreach_targets: {
         Args: { p_admin_id?: string }
@@ -3005,6 +3118,7 @@ export type Database = {
           slug: string
         }[]
       }
+      get_tenant_subscription: { Args: { _tenant?: string }; Returns: Json }
       get_user_tenant_ids: { Args: never; Returns: string[] }
       has_role: {
         Args: {
@@ -3022,6 +3136,18 @@ export type Database = {
       }
       link_device_to_tenant: {
         Args: { p_device_id: string; p_device_name?: string }
+        Returns: Json
+      }
+      list_tenant_subscriptions: { Args: never; Returns: Json[] }
+      record_tenant_payment: {
+        Args: {
+          _amount?: number
+          _method?: string
+          _note?: string
+          _plan: string
+          _reference?: string
+          _tenant: string
+        }
         Returns: Json
       }
       resolve_public_tenant: { Args: { p_tenant_id?: string }; Returns: string }
