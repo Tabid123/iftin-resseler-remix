@@ -61,9 +61,16 @@ export const listApkReleases = createServerFn({ method: 'GET' }).handler(
             size: a.size as number,
           })),
       }))
-      .filter((r) => r.assets.length > 0);
+      .filter((r) => r.assets.length > 0)
+      .sort(
+        (a, b) =>
+          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+      )
+      // Kaliya APK-ga ugu dambeeyay
+      .slice(0, 1);
 
     return { releases };
+
   },
 );
 
