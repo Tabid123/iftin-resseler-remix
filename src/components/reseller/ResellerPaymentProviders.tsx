@@ -128,6 +128,26 @@ export default function ResellerPaymentProviders() {
   return (
     <div className="space-y-6">
       <Card>
+        <CardHeader><CardTitle>Ku dar si degdeg ah</CardTitle></CardHeader>
+        <CardContent className="flex flex-wrap gap-3">
+          {QUICK_PAYMENTS.map((p) => {
+            const exists = items.some((i) => i.provider_name.toLowerCase() === p.provider_name.toLowerCase());
+            return (
+              <Button
+                key={p.provider_name}
+                variant={exists ? 'secondary' : 'default'}
+                disabled={saving || exists}
+                onClick={() => quickAdd(p.provider_name)}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                {p.provider_name}{exists ? ' (way jirtaa)' : ''}
+              </Button>
+            );
+          })}
+        </CardContent>
+      </Card>
+
+      <Card>
         <CardHeader><CardTitle>Ku dar Payment Provider</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-3">
