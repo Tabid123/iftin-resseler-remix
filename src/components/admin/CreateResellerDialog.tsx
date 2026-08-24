@@ -164,11 +164,27 @@ export default function CreateResellerDialog({ open, onOpenChange, onCreated }: 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label>Primary color</Label>
-              <Input type="color" value={primary} onChange={(e) => setPrimary(e.target.value)} className="h-10 p-1" />
+              <div className="flex items-center gap-2">
+                <Input type="color" value={primary} onChange={(e) => setPrimary(e.target.value)} className="h-10 w-14 p-1 shrink-0" />
+                <Input
+                  value={primary}
+                  onChange={(e) => setPrimary(e.target.value)}
+                  placeholder="#0f172a"
+                  className="h-10 font-mono uppercase"
+                />
+              </div>
             </div>
             <div className="space-y-2">
               <Label>Secondary color</Label>
-              <Input type="color" value={secondary} onChange={(e) => setSecondary(e.target.value)} className="h-10 p-1" />
+              <div className="flex items-center gap-2">
+                <Input type="color" value={secondary} onChange={(e) => setSecondary(e.target.value)} className="h-10 w-14 p-1 shrink-0" />
+                <Input
+                  value={secondary}
+                  onChange={(e) => setSecondary(e.target.value)}
+                  placeholder="#ffffff"
+                  className="h-10 font-mono uppercase"
+                />
+              </div>
             </div>
           </div>
 
