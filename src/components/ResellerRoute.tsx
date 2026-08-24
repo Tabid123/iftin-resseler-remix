@@ -39,12 +39,13 @@ const ResellerRoute = ({ children }: { children: React.ReactNode }) => {
       if (!active) return;
 
       if (superRole) {
+        await supabase.auth.signOut();
         toast({
-          title: 'Super admin',
-          description: 'Super admin-ku reseller dashboard ma geli karo. Isticmaal /superadmin.',
+          title: 'Reseller login',
+          description: 'Fadlan geli email-ka iyo password-ka reseller-ka.',
           variant: 'destructive',
         });
-        navigate('/superadmin', { replace: true });
+        navigate('/reseller/login', { replace: true });
         return;
       }
 
