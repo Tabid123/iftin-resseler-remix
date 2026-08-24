@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, Save, Wallet } from 'lucide-react';
+import { Loader2, Save, Wallet, Plus } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
 
 interface ProviderRow {
@@ -20,6 +20,14 @@ interface ProviderRow {
 }
 
 const ORDER = ['hormuud', 'somnet', 'somtel', 'amtel'];
+
+const DEFAULT_PROVIDERS = [
+  { provider_name: 'Hormuud', provider_logo: '/storage/logos/hormuud.jpg' },
+  { provider_name: 'Somnet', provider_logo: '/storage/logos/somnet.jpg' },
+  { provider_name: 'Somtel', provider_logo: '/storage/logos/somtel.png' },
+  { provider_name: 'Amtel', provider_logo: '/storage/logos/somlink.jpg' },
+];
+
 
 export default function ResellerProviders() {
   const { currentTenantId } = useTenant();
@@ -61,22 +69,56 @@ export default function ResellerProviders() {
     toast({ title: 'Guul', description: message });
   };
 
+  const seedDefaults = async () => {
+    if (!currentTenantId) return;
+    setSavingId('seed');
+    const existing = new Set(items.map((i) => i.provider_name?.toLowerCase()));
+    const rows = DEFAULT_PROVIDERS.filter((d) => !existing.has(d.provider_name.toLowerCase())).map((d, i) => ({
+      provider_name: d.provider_name,
+      provider_logo: d.provider_logo,
+      is_active: true,
+      display_order: items.length + i + 1,
+      tenant_id: currentTenantId,
+    }));
+    if (rows.length === 0) { setSavingId(null); toast({ title: 'Ogow', description: '4-ta shirkadood horey ayay u jireen' }); return; }
+    const { error } = await supabase.from('providers_config').insert(rows);
+    setSavingId(null);
+    if (error) { toast({ title: 'Khalad', description: error.message, variant: 'destructive' }); return; }
+    toast({ title: 'Guul', description: `${rows.length} shirkadood ayaa lagu daray` });
+    load();
+  };
+
   if (loading) {
     return <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
   }
 
   return (
     <div className="space-y-4">
-      <div>
-        <h2 className="text-2xl font-bold">Shirkadaha</h2>
-        <p className="text-sm text-muted-foreground">
-          Shirkad walba shid/dami, lambar lacag u deji, ama u calaamadi "Balance ma heyno".
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="text-2xl font-bold">Shirkadaha</h2>
+          <p className="text-sm text-muted-foreground">
+            Shirkad walba shid/dami, lambar lacag u deji, ama u calaamadi "Balance ma heyno".
+          </p>
+        </div>
+        <Button variant="outline" onClick={seedDefaults} disabled={savingId === 'seed'}>
+          {savingId === 'seed' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+          Ku dar 4 shirkadood
+        </Button>
       </div>
 
       {items.length === 0 && (
-        <Card><CardContent className="py-8 text-center text-muted-foreground">Shirkad lama helin.</CardContent></Card>
+        <Card>
+          <CardContent className="space-y-3 py-8 text-center text-muted-foreground">
+            <p>Shirkad lama helin.</p>
+            <Button onClick={seedDefaults} disabled={savingId === 'seed'}>
+              <Plus className="mr-2 h-4 w-4" /> Ku dar Hormuud, Somnet, Somtel, Amtel
+            </Button>
+          </CardContent>
+        </Card>
       )}
+
+
 
       <div className="grid gap-4 md:grid-cols-2">
         {items.map((p) => (
