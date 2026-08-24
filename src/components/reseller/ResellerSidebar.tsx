@@ -44,7 +44,6 @@ export const RESELLER_GROUPS: ResellerNavGroup[] = [
     items: [
       { value: 'transactions-dashboard', title: 'Transactions', titleSo: 'Transactions', icon: BarChart3 },
       { value: 'sms-payments', title: 'SMS Payments', titleSo: 'SMS Lacago', icon: MessageSquare },
-      { value: 'payment', title: 'Payment Providers', titleSo: 'Payment', icon: CreditCard },
     ],
   },
   {
