@@ -29,6 +29,21 @@ const blank = {
   ussd_code_template: '',
 };
 
+const QUICK_PAYMENTS = [
+  {
+    provider_name: 'EVC Plus',
+    provider_logo: '/storage/payment-logos/evc.png',
+    prefix_code: '*7',
+    ussd_code_template: '*712*{number}*{amount}#',
+  },
+  {
+    provider_name: 'e-Dahab',
+    provider_logo: '/storage/payment-logos/jeeb.jpg',
+    prefix_code: '*8',
+    ussd_code_template: '*220*{number}*{amount}#',
+  },
+];
+
 export default function ResellerPaymentProviders() {
   const { currentTenantId } = useTenant();
   const [items, setItems] = useState<PaymentProvider[]>([]);
@@ -67,6 +82,28 @@ export default function ResellerPaymentProviders() {
     load();
   };
 
+  const quickAdd = async (name: string) => {
+    if (!currentTenantId) return;
+    const preset = QUICK_PAYMENTS.find((p) => p.provider_name === name);
+    if (!preset) return;
+    if (items.some((i) => i.provider_name.toLowerCase() === name.toLowerCase())) {
+      toast({ title: 'Horey ayuu u jiray', description: `${name} horey ayaa loo daray` });
+      return;
+    }
+    setSaving(true);
+    const { error } = await supabase.from('payment_providers_config').insert([{
+      ...preset,
+      commission_rate: 0,
+      payment_number: '',
+      is_active: true,
+      tenant_id: currentTenantId,
+    }]);
+    setSaving(false);
+    if (error) { toast({ title: 'Khalad', description: error.message, variant: 'destructive' }); return; }
+    toast({ title: 'Guul', description: `${name} waa lagu daray` });
+    load();
+  };
+
   const saveEdit = async () => {
     if (!editing) return;
     const { error } = await supabase.from('payment_providers_config').update({
@@ -90,6 +127,26 @@ export default function ResellerPaymentProviders() {
 
   return (
     <div className="space-y-6">
+      <Card>
+        <CardHeader><CardTitle>Ku dar si degdeg ah</CardTitle></CardHeader>
+        <CardContent className="flex flex-wrap gap-3">
+          {QUICK_PAYMENTS.map((p) => {
+            const exists = items.some((i) => i.provider_name.toLowerCase() === p.provider_name.toLowerCase());
+            return (
+              <Button
+                key={p.provider_name}
+                variant={exists ? 'secondary' : 'default'}
+                disabled={saving || exists}
+                onClick={() => quickAdd(p.provider_name)}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                {p.provider_name}{exists ? ' (way jirtaa)' : ''}
+              </Button>
+            );
+          })}
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader><CardTitle>Ku dar Payment Provider</CardTitle></CardHeader>
         <CardContent className="space-y-4">
