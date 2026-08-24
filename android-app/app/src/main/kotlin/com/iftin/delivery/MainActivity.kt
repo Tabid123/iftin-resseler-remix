@@ -280,6 +280,14 @@ fun MainScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val db = remember(context) { com.iftin.delivery.data.DeliveryDatabase.getInstance(context) }
+    var tenantName by remember { mutableStateOf(TenantSession.tenantName(context).orEmpty()) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            tenantName = TenantSession.tenantName(context).orEmpty()
+            delay(3000)
+        }
+    }
 
     // Continuously check actual service state
     LaunchedEffect(Unit) {
@@ -323,14 +331,25 @@ fun MainScreen(
             shadowElevation = 4.dp
         ) {
             Column(
-                modifier = Modifier.padding(24.dp)
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .padding(horizontal = 20.dp, vertical = 16.dp)
             ) {
                 Text(
-                    text = "IFTIN INTERNET DELIVERY",
+                    text = tenantName.ifBlank { "INTERNET DELIVERY" }.uppercase(),
                     color = Color.White,
                     fontSize = 20.sp,
+                    lineHeight = 26.sp,
                     fontWeight = FontWeight.Bold
                 )
+                if (tenantName.isNotBlank()) {
+                    Text(
+                        text = "INTERNET DELIVERY",
+                        color = Color.White.copy(alpha = 0.9f),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically
