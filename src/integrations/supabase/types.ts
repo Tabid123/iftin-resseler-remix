@@ -1971,6 +1971,8 @@ export type Database = {
           evoucher_rate: number | null
           id: string
           is_active: boolean | null
+          out_of_balance: boolean
+          payment_number: string | null
           promotional_text: string | null
           provider_logo: string | null
           provider_name: string
@@ -1988,6 +1990,8 @@ export type Database = {
           evoucher_rate?: number | null
           id?: string
           is_active?: boolean | null
+          out_of_balance?: boolean
+          payment_number?: string | null
           promotional_text?: string | null
           provider_logo?: string | null
           provider_name: string
@@ -2005,6 +2009,8 @@ export type Database = {
           evoucher_rate?: number | null
           id?: string
           is_active?: boolean | null
+          out_of_balance?: boolean
+          payment_number?: string | null
           promotional_text?: string | null
           provider_logo?: string | null
           provider_name?: string
@@ -2935,6 +2941,8 @@ export type Database = {
           evoucher_rate: number | null
           id: string
           is_active: boolean | null
+          out_of_balance: boolean
+          payment_number: string | null
           promotional_text: string | null
           provider_logo: string | null
           provider_name: string
