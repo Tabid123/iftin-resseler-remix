@@ -81,6 +81,14 @@ export const RESELLER_GROUPS: ResellerNavGroup[] = [
       { value: 'banners', title: 'Banners', titleSo: 'Banners', icon: ImageIcon },
     ],
   },
+  {
+    label: 'Settings',
+    labelSo: 'Settings',
+    icon: Settings,
+    items: [
+      { value: 'payment', title: 'Payment Providers', titleSo: 'Payment', icon: CreditCard },
+    ],
+  },
 ];
 
 export const RESELLER_TABS = [
