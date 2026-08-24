@@ -100,6 +100,9 @@ export default function SuperAdminDashboard() {
                 <TabsTrigger value="subscriptions">
                   <CreditCard className="h-4 w-4 mr-2" /> Subscriptions
                 </TabsTrigger>
+                <TabsTrigger value="flows">
+                  <Radio className="h-4 w-4 mr-2" /> USSD Flows
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="tenants">
                 <Suspense fallback={<TabLoader />}>
@@ -109,6 +112,15 @@ export default function SuperAdminDashboard() {
               <TabsContent value="subscriptions">
                 <Suspense fallback={<TabLoader />}>
                   <SubscriptionsManager />
+                </Suspense>
+              </TabsContent>
+              <TabsContent value="flows">
+                <p className="mb-4 text-sm text-muted-foreground">
+                  Flow-yadan waa kuwo la wadaago shirkadaha oo dhan. Tenant walba PIN-kiisa ayuu ka
+                  badalaa dashboard-kiisa (Settings → SIM PIN); halkan waa tallaabooyinka menu-ga.
+                </p>
+                <Suspense fallback={<TabLoader />}>
+                  <UssdFlowsManager />
                 </Suspense>
               </TabsContent>
             </Tabs>
