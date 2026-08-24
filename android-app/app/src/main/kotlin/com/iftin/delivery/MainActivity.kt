@@ -18,6 +18,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import androidx.compose.runtime.SideEffect
@@ -392,232 +394,246 @@ fun MainScreen(
             }
         }
 
-        // Stats Cards
+        // Scrollable content
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatCard(
-                    title = "Total",
-                    value = totalDeliveries.toString(),
-                    color = Color(0xFF0099FF),
-                    modifier = Modifier.weight(1f)
-                )
-                StatCard(
-                    title = "Success",
-                    value = successfulDeliveries.toString(),
-                    color = Color(0xFF00C853),
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatCard(
-                    title = "Failed",
-                    value = failedDeliveries.toString(),
-                    color = Color(0xFFFF3D00),
-                    modifier = Modifier.weight(1f)
-                )
-                StatCard(
-                    title = "Pending",
-                    value = pendingDeliveries.toString(),
-                    color = Color(0xFFFFA726),
-                    modifier = Modifier.weight(1f)
-                )
-            }
-        }
-
-        // Status Card (instead of control buttons)
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = if (isServiceRunning) Color(0xFFE8F5E9) else Color(0xFFFFF3E0)
-            )
-        ) {
-            Row(
+            // Stats Cards
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(16.dp)
             ) {
-                Text(
-                    text = if (isServiceRunning) "✅" else "🔄",
-                    fontSize = 24.sp
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
-                    Text(
-                        text = if (isServiceRunning) "Service Running" else "Service Restarting",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (isServiceRunning) Color(0xFF2E7D32) else Color(0xFFE65100)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    StatCard(
+                        title = "Total",
+                        value = totalDeliveries.toString(),
+                        color = Color(0xFF0099FF),
+                        modifier = Modifier.weight(1f)
                     )
-                    Text(
-                        text = "Service runs automatically 24/7",
-                        fontSize = 12.sp,
-                        color = Color.Gray
+                    StatCard(
+                        title = "Success",
+                        value = successfulDeliveries.toString(),
+                        color = Color(0xFF00C853),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    StatCard(
+                        title = "Failed",
+                        value = failedDeliveries.toString(),
+                        color = Color(0xFFFF3D00),
+                        modifier = Modifier.weight(1f)
+                    )
+                    StatCard(
+                        title = "Pending",
+                        value = pendingDeliveries.toString(),
+                        color = Color(0xFFFFA726),
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Setup Buttons
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            OutlinedButton(
-                onClick = onRequestBatteryOptimization,
+            // Status Card (instead of control buttons)
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text(
-                    text = "DISABLE BATTERY OPTIMIZATION",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedButton(
-                onClick = onOpenAccessibilitySettings,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
+                    .padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color(0xFFFFF3E0)
+                colors = CardDefaults.cardColors(
+                    containerColor = if (isServiceRunning) Color(0xFFE8F5E9) else Color(0xFFFFF3E0)
                 )
             ) {
-                Text(
-                    text = "ENABLE USSD ACCESSIBILITY SERVICE",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFFFF6F00)
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = if (isServiceRunning) "✅" else "🔄",
+                        fontSize = 24.sp
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            text = if (isServiceRunning) "Service Running" else "Service Restarting",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isServiceRunning) Color(0xFF2E7D32) else Color(0xFFE65100)
+                        )
+                        Text(
+                            text = "Service runs automatically 24/7",
+                            fontSize = 12.sp,
+                            color = Color.Gray
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            OutlinedButton(
-                onClick = onEnableOverlay,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color(0xFFFFF8E1)
-                )
-            ) {
-                Text(
-                    text = "🧪 ENABLE PIN DEBUG OVERLAY",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFFE65100)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Instructions
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
-        ) {
+            // Setup Buttons
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
             ) {
-                Text(
-                    text = "📱 Setup Instructions",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF0099FF)
-                )
+                OutlinedButton(
+                    onClick = onRequestBatteryOptimization,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "DISABLE BATTERY OPTIMIZATION",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+                
                 Spacer(modifier = Modifier.height(12.dp))
-                InstructionItem("1. Insert Hormuud SIM in Slot 1")
-                InstructionItem("2. Insert Somnet SIM in Slot 2")
-                InstructionItem("3. Enable USSD Accessibility Service")
-                InstructionItem("4. Disable battery optimization")
-                InstructionItem("5. Keep phone charging 24/7")
-                InstructionItem("6. Service runs automatically ♾️")
-            }
-        }
 
-        // PIN Debug snapshot card — surfaces last Accessibility PIN-write attempt
-        // so the user can diagnose "Invalid PIN format" without adb logcat.
-        if (pinDebugSnapshot.isNotBlank()) {
+                OutlinedButton(
+                    onClick = onOpenAccessibilitySettings,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color(0xFFFFF3E0)
+                    )
+                ) {
+                    Text(
+                        text = "ENABLE USSD ACCESSIBILITY SERVICE",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFFFF6F00)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedButton(
+                    onClick = onEnableOverlay,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color(0xFFFFF8E1)
+                    )
+                ) {
+                    Text(
+                        text = "🧪 ENABLE PIN DEBUG OVERLAY",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFFE65100)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Instructions
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8E1))
+                colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
                     Text(
-                        text = "🧪 Last PIN Attempt",
-                        fontSize = 16.sp,
+                        text = "📱 Setup Instructions",
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFE65100)
+                        color = Color(0xFF0099FF)
                     )
-                    if (pinDebugTime > 0L) {
-                        val ago = ((System.currentTimeMillis() - pinDebugTime) / 1000L).coerceAtLeast(0)
-                        Text(
-                            text = "${ago}s ago",
-                            fontSize = 12.sp,
-                            color = Color.Gray
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = pinDebugSnapshot,
-                        fontSize = 12.sp,
-                        color = Color.DarkGray
-                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    InstructionItem("1. Insert Hormuud SIM in Slot 1")
+                    InstructionItem("2. Insert Somnet SIM in Slot 2")
+                    InstructionItem("3. Enable USSD Accessibility Service")
+                    InstructionItem("4. Disable battery optimization")
+                    InstructionItem("5. Keep phone charging 24/7")
+                    InstructionItem("6. Service runs automatically ♾️")
                 }
             }
+
+            // PIN Debug snapshot card — surfaces last Accessibility PIN-write attempt
+            // so the user can diagnose "Invalid PIN format" without adb logcat.
+            if (pinDebugSnapshot.isNotBlank()) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8E1))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "🧪 Last PIN Attempt",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFE65100)
+                        )
+                        if (pinDebugTime > 0L) {
+                            val ago = ((System.currentTimeMillis() - pinDebugTime) / 1000L).coerceAtLeast(0)
+                            Text(
+                                text = "${ago}s ago",
+                                fontSize = 12.sp,
+                                color = Color.Gray
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = pinDebugSnapshot,
+                            fontSize = 12.sp,
+                            color = Color.DarkGray
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // Bottom Logout Button
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(
-            onClick = onLogout,
+        // Bottom Logout Bar (always visible)
+        Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .height(56.dp)
                 .navigationBarsPadding(),
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
+            color = Color.White,
+            shadowElevation = 8.dp
         ) {
-            Text(
-                text = "LOGOUT / KA BAX",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Button(
+                onClick = onLogout,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .height(56.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
+            ) {
+                Text(
+                    text = "LOGOUT / KA BAX",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
