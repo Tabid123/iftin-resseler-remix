@@ -39,16 +39,28 @@ const ResellerLogin = () => {
 
       const manager = (memberships ?? []).find((m: any) =>
         MANAGER_ROLES.includes(String(m.member_role ?? m.role ?? '').toLowerCase()) &&
-        m.tenants?.status === 'active'
+        (m.tenants?.status ?? 'active') !== 'suspended'
       );
 
       if (!manager?.tenant_id) {
-        await supabase.auth.signOut();
-        toast({
-          title: 'Ma lihid fasax',
-          description: 'Koontadan reseller firfircoon kuma xirna',
-          variant: 'destructive',
-        });
+        const { data: superRole } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', data.user.id)
+          .in('role', ['admin', 'super_admin'])
+          .limit(1)
+          .maybeSingle();
+        if (!superRole) {
+          await supabase.auth.signOut();
+          toast({
+            title: 'Ma lihid fasax',
+            description: 'Koontadan reseller firfircoon kuma xirna',
+            variant: 'destructive',
+          });
+          return;
+        }
+        toast({ title: 'Guul', description: 'Dashboard-ka reseller-ka waa la furay' });
+        navigate('/reseller', { replace: true });
         return;
       }
 
