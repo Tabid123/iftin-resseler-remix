@@ -18,8 +18,9 @@ on:
 
 jobs:
   build-release:
+    # Release APK on every push to main, on tags, and on manual release runs
     if: |
-      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
+      github.event_name == 'push' ||
       (github.event_name == 'workflow_dispatch' && (github.event.inputs.build_type == 'release' || github.event.inputs.build_type == ''))
     runs-on: ubuntu-latest
     defaults:
@@ -66,20 +67,24 @@ jobs:
         run: |
           mkdir -p ../artifacts
           find app/build/outputs/apk -name "*.apk" -exec cp {} ../artifacts/ \;
+          SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
+          for f in ../artifacts/*.apk; do
+            mv "$f" "../artifacts/iftin-delivery-release-${SHORT_SHA}.apk"
+          done
           ls -la ../artifacts
 
-      - name: Upload Release APK artifact
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
+      - name: Publish Release APK to rolling release (main pushes / manual)
+        if: "!startsWith(github.ref, 'refs/tags/v')"
+        uses: softprops/action-gh-release@v2
         with:
-          name: iftin-delivery-release-apk
-          path: artifacts/*.apk
-          retention-days: 3
-          compression-level: 0
-          overwrite: true
-          if-no-files-found: error
+          tag_name: release-latest
+          name: Release APK (latest)
+          prerelease: false
+          make_latest: "true"
+          files: artifacts/*.apk
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Release APK to GitHub Release
+      - name: Publish Release APK to tagged release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
@@ -87,9 +92,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   build-debug:
-    if: |
-      (github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/v')) ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.build_type == 'debug')
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.build_type == 'debug'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -121,18 +124,7 @@ jobs:
           find app/build/outputs/apk -name "*.apk" -exec cp {} ../artifacts/ \;
           ls -la ../artifacts
 
-      - name: Upload Debug APK artifact
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: iftin-delivery-debug-apk
-          path: artifacts/*.apk
-          retention-days: 1
-          compression-level: 0
-          overwrite: true
-          if-no-files-found: error
-
-      # Fallback: artifact storage quota can be full, releases don't use that quota
+      # Artifact storage quota can be full; releases don't use that quota
       - name: Publish Debug APK to rolling prerelease
         uses: softprops/action-gh-release@v2
         with:
