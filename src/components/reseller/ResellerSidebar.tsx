@@ -14,6 +14,7 @@ import {
   ChevronRight,
   LogOut,
   Building2,
+  Settings,
 } from 'lucide-react';
 import { NavLink } from "@/lib/router-compat";
 import { useTenant } from '@/contexts/TenantContext';
@@ -44,7 +45,6 @@ export const RESELLER_GROUPS: ResellerNavGroup[] = [
     items: [
       { value: 'transactions-dashboard', title: 'Transactions', titleSo: 'Transactions', icon: BarChart3 },
       { value: 'sms-payments', title: 'SMS Payments', titleSo: 'SMS Lacago', icon: MessageSquare },
-      { value: 'payment', title: 'Payment Providers', titleSo: 'Payment', icon: CreditCard },
     ],
   },
   {
@@ -80,6 +80,14 @@ export const RESELLER_GROUPS: ResellerNavGroup[] = [
     items: [
       { value: 'send-notification', title: 'Send Notification', titleSo: 'Fariin Dir', icon: Send },
       { value: 'banners', title: 'Banners', titleSo: 'Banners', icon: ImageIcon },
+    ],
+  },
+  {
+    label: 'Settings',
+    labelSo: 'Settings',
+    icon: Settings,
+    items: [
+      { value: 'payment', title: 'Payment Providers', titleSo: 'Payment', icon: CreditCard },
     ],
   },
 ];
