@@ -280,6 +280,14 @@ fun MainScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val db = remember(context) { com.iftin.delivery.data.DeliveryDatabase.getInstance(context) }
+    var tenantName by remember { mutableStateOf(TenantSession.tenantName(context).orEmpty()) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            tenantName = TenantSession.tenantName(context).orEmpty()
+            delay(3000)
+        }
+    }
 
     // Continuously check actual service state
     LaunchedEffect(Unit) {
